@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1400">
+  <defs>
+    <style>
+      .title { font: bold 18px sans-serif; fill: #333; }
+      .actor-box { fill: #e3f2fd; stroke: #1976d2; stroke-width: 2; }
+      .actor-text { font: bold 14px sans-serif; fill: #1976d2; text-anchor: middle; }
+      .step-box { fill: #fff3e0; stroke: #f57c00; stroke-width: 1; }
+      .step-text { font: bold 12px sans-serif; fill: #f57c00; }
+      .arrow { stroke: #424242; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .arrow-text { font: 11px monospace; fill: #424242; }
+      .note-box { fill: #f5f5f5; stroke: #9e9e9e; stroke-width: 1; stroke-dasharray: 4; }
+      .note-text { font: 10px sans-serif; fill: #616161; }
+      .process-text { font: italic 10px sans-serif; fill: #757575; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#424242" />
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="500" y="30" class="title" text-anchor="middle">OAuth 2.1 with PKCE Flow for ServiceNow</text>
+  
+  <!-- Actors -->
+  <rect x="100" y="60" width="200" height="60" class="actor-box" rx="5"/>
+  <text x="200" y="95" class="actor-text">ServiceNow Instance</text>
+  
+  <rect x="700" y="60" width="200" height="60" class="actor-box" rx="5"/>
+  <text x="800" y="95" class="actor-text">MCP Server</text>
+  
+  <!-- Actor lifelines -->
+  <line x1="200" y1="120" x2="200" y2="1350" stroke="#bdbdbd" stroke-width="1" stroke-dasharray="5,5"/>
+  <line x1="800" y1="120" x2="800" y2="1350" stroke="#bdbdbd" stroke-width="1" stroke-dasharray="5,5"/>
+  
+  <!-- STEP 1: Client Registration -->
+  <rect x="150" y="140" width="500" height="30" class="step-box" rx="3"/>
+  <text x="400" y="160" class="step-text" text-anchor="middle">STEP 1: Client Registration (One-Time Setup via DCR)</text>
+  
+  <line x1="200" y1="190" x2="800" y2="190" class="arrow"/>
+  <text x="450" y="185" class="arrow-text">POST /register (DCR_AUTH_TOKEN)</text>
+  
+  <rect x="650" y="210" width="280" height="40" class="note-box" rx="3"/>
+  <text x="790" y="225" class="process-text" text-anchor="middle">Generate client_id & client_secret</text>
+  <text x="790" y="240" class="process-text" text-anchor="middle">Store in client registry</text>
+  
+  <line x1="800" y1="270" x2="200" y2="270" class="arrow"/>
+  <text x="450" y="265" class="arrow-text">200 OK: {client_id, client_secret}</text>
+  
+  <rect x="70" y="290" width="260" height="25" class="note-box" rx="3"/>
+  <text x="200" y="307" class="note-text" text-anchor="middle">Stores credentials in oauth_credential table</text>
+  
+  <!-- STEP 2: Authorization Request -->
+  <rect x="150" y="340" width="500" height="30" class="step-box" rx="3"/>
+  <text x="400" y="360" class="step-text" text-anchor="middle">STEP 2: Authorization Request (Per Authentication)</text>
+  
+  <rect x="70" y="390" width="260" height="40" class="note-box" rx="3"/>
+  <text x="200" y="405" class="process-text" text-anchor="middle">Generate code_verifier</text>
+  <text x="200" y="420" class="process-text" text-anchor="middle">Compute code_challenge = SHA256(verifier)</text>
+  
+  <line x1="200" y1="450" x2="800" y2="450" class="arrow"/>
+  <text x="380" y="445" class="arrow-text">GET /oauth/authorize (+ code_challenge)</text>
+  
+  <rect x="650" y="470" width="280" height="55" class="note-box" rx="3"/>
+  <text x="790" y="485" class="process-text" text-anchor="middle">Validate client & redirect_uri</text>
+  <text x="790" y="500" class="process-text" text-anchor="middle">Validate PKCE parameters</text>
+  <text x="790" y="515" class="process-text" text-anchor="middle">Generate & store auth code</text>
+  
+  <line x1="800" y1="545" x2="200" y2="545" class="arrow"/>
+  <text x="420" y="540" class="arrow-text">302 Redirect: code={AUTH_CODE}</text>
+  
+  <!-- STEP 3: Token Exchange -->
+  <rect x="150" y="580" width="500" height="30" class="step-box" rx="3"/>
+  <text x="400" y="600" class="step-text" text-anchor="middle">STEP 3: Token Exchange (Per Authentication)</text>
+  
+  <line x1="200" y1="630" x2="800" y2="630" class="arrow"/>
+  <text x="400" y="625" class="arrow-text">POST /oauth/token (code + code_verifier)</text>
+  
+  <rect x="650" y="650" width="280" height="70" class="note-box" rx="3"/>
+  <text x="790" y="665" class="process-text" text-anchor="middle">Validate client credentials</text>
+  <text x="790" y="680" class="process-text" text-anchor="middle">Validate authorization code</text>
+  <text x="790" y="695" class="process-text" text-anchor="middle">Validate PKCE: SHA256(verifier) == challenge</text>
+  <text x="790" y="710" class="process-text" text-anchor="middle">Generate JWT access & refresh tokens</text>
+  
+  <line x1="800" y1="740" x2="200" y2="740" class="arrow"/>
+  <text x="430" y="735" class="arrow-text">200 OK: {access_token, refresh_token}</text>
+  
+  <!-- STEP 4: Authenticated Requests -->
+  <rect x="150" y="780" width="500" height="30" class="step-box" rx="3"/>
+  <text x="400" y="800" class="step-text" text-anchor="middle">STEP 4: Authenticated MCP Requests (Ongoing)</text>
+  
+  <line x1="200" y1="830" x2="800" y2="830" class="arrow"/>
+  <text x="410" y="825" class="arrow-text">POST /mcp (Authorization: Bearer JWT)</text>
+  
+  <rect x="650" y="850" width="280" height="70" class="note-box" rx="3"/>
+  <text x="790" y="865" class="process-text" text-anchor="middle">Verify JWT signature</text>
+  <text x="790" y="880" class="process-text" text-anchor="middle">Check expiration</text>
+  <text x="790" y="895" class="process-text" text-anchor="middle">Check Redis blacklist</text>
+  <text x="790" y="910" class="process-text" text-anchor="middle">Execute tool</text>
+  
+  <line x1="800" y1="940" x2="200" y2="940" class="arrow"/>
+  <text x="450" y="935" class="arrow-text">200 OK: {jsonrpc: "2.0", result}</text>
+  
+  <!-- STEP 5: Token Refresh -->
+  <rect x="150" y="980" width="500" height="30" class="step-box" rx="3"/>
+  <text x="400" y="1000" class="step-text" text-anchor="middle">STEP 5: Token Refresh (When Access Token Expires)</text>
+  
+  <line x1="200" y1="1030" x2="800" y2="1030" class="arrow"/>
+  <text x="380" y="1025" class="arrow-text">POST /oauth/token (grant_type=refresh_token)</text>
+  
+  <rect x="650" y="1050" width="280" height="70" class="note-box" rx="3"/>
+  <text x="790" y="1065" class="process-text" text-anchor="middle">Validate refresh token</text>
+  <text x="790" y="1080" class="process-text" text-anchor="middle">Revoke old token in Redis</text>
+  <text x="790" y="1095" class="process-text" text-anchor="middle">Generate new tokens</text>
+  <text x="790" y="1110" class="process-text" text-anchor="middle">Increment rotation_count</text>
+  
+  <line x1="800" y1="1140" x2="200" y2="1140" class="arrow"/>
+  <text x="400" y="1135" class="arrow-text">200 OK: {new access_token, new refresh_token}</text>
+  
+  <!-- STEP 6: Token Revocation -->
+  <rect x="150" y="1180" width="500" height="30" class="step-box" rx="3"/>
+  <text x="400" y="1200" class="step-text" text-anchor="middle">STEP 6: Token Revocation (Optional - On Disconnect)</text>
+  
+  <line x1="200" y1="1230" x2="800" y2="1230" class="arrow"/>
+  <text x="420" y="1225" class="arrow-text">POST /oauth/revoke (token to invalidate)</text>
+  
+  <rect x="650" y="1250" width="280" height="40" class="note-box" rx="3"/>
+  <text x="790" y="1265" class="process-text" text-anchor="middle">Decode JWT to get jti</text>
+  <text x="790" y="1280" class="process-text" text-anchor="middle">Add jti to Redis blacklist with TTL</text>
+  
+  <line x1="800" y1="1310" x2="200" y2="1310" class="arrow"/>
+  <text x="500" y="1305" class="arrow-text">200 OK: {}</text>
+  
+  <!-- Legend -->
+  <rect x="50" y="1350" width="900" height="40" fill="#fafafa" stroke="#e0e0e0" stroke-width="1" rx="3"/>
+  <text x="500" y="1375" font="bold 12px sans-serif" fill="#424242" text-anchor="middle">
+    Key: Blue boxes = ServiceNow/MCP Server | Orange boxes = Flow Steps | Gray boxes = Server Processing
+  </text>
+</svg>
