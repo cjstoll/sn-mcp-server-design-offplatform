@@ -1,7 +1,9 @@
 # ServiceNow AI Agent Fabric 
 ### MCP Server Implementation - Hosted: Off Platform
 
-Production-ready guidance for Model Context Protocol (MCP) server implementation(s) of hosted AI services and LLMs for integration to ServiceNow AI Platform instances.  NOTE: This is not about setting up MCP Server(s) within a ServiceNow instance aka ON PLATFORM.
+Production-ready guidance for Model Context Protocol (MCP) server implementation(s) of hosted AI services and LLMs for integration to ServiceNow AI Platform instances.  
+
+💡**NOTE:** This is not about setting up MCP Server(s) within a ServiceNow instance aka ON PLATFORM.
 
 ## Overview
 
