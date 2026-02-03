@@ -42,26 +42,43 @@ This guide assumes practitioners have:
 
 ## Documentation Artifacts
 
-This implementation guide includes the following resources:
+This Document Series which is listed (and linked) at the top of each of the document parts.
 
-**Documentation Series (5 Parts):**
-1. Part 1: Introduction and Overview (this document)
-2. Part 2: Server Foundation - Core Infrastructure Setup
-3. Part 3: MCP Protocol Implementation and Tools
-4. Part 4: OAuth 2.1 Implementation
-5. Part 5: Appendices and Recommendations
+### Reference Implementations
 
-**Reference Implementations:**
-- `server-compliant.js` - Local VM deployment (JavaScript, file-based storage, Redis)
-- `gcp-compliant.ts` - Google Cloud deployment (TypeScript, Firestore storage)
+**Production-Ready Templates** (located in `templates/` folder):
+```
+mcp-server-pseudocode-template.md    - Language-agnostic reference
+mcp-server-javascript-template.js    - JavaScript/Node.js local deployment
+mcp-server-typescript-template.ts    - TypeScript/Google Cloud deployment
+mcp-server-python-template.py        - Python/FastAPI implementation
+```
 
-**Template Files:**
-- `server-example.js` - White-label template for customization
-- `.env.example` - Environment configuration template
+### Template Files
 
-**Visual Aids:**
-- `oauth-flow-diagram.mermaid` - OAuth 2.1 sequence diagram (Mermaid format)
-- `oauth-flow-diagram.svg` - OAuth 2.1 sequence diagram (SVG format)
+**Environment Configuration Templates** (located in `templates/` folder):
+```
+.env.template.txt                     - Comprehensive environment variable reference (all implementations)
+.env.example.txt                      - Detailed example with Local VM/JavaScript implementation focus
+```
+
+💡 **NOTE:** Copy either template to `.env` in your project root and configure with your specific values. The `.txt` extension prevents markdown rendering issues when viewing on GitHub.
+
+
+### Visual Aids
+
+**Diagrams** (located in `docs/diagrams/` folder):
+```
+View_Diagram.md                       - Interactive OAuth 2.1 + PKCE flow (GitHub-rendered)
+oauth-flow-github-safe.mermaid       - Simplified Mermaid diagram (GitHub-compatible)
+oauth-flow.mermaid                   - Detailed Mermaid diagram (for local editing)
+oauth-flow.svg                   - Detailed diagram (SVG format)
+```
+
+**Presentation Materials** (located in `docs/presentations/` folder):
+```
+[TBD]         - Conference and/or training presentation(s)
+```
 
 ---
 
@@ -336,13 +353,13 @@ This guide focuses exclusively on ServiceNow integration. Patterns for other MCP
 
 ## Next Steps
 
-Proceed to **Part 2: Server Foundation - Core Infrastructure Setup** to begin building your MCP server implementation.
+Proceed to **[Part 2: Core Infrastructure](MCP%20Server%20Implementation%20-%20Part%202%20Core%20Infrastructure.md) - Server Foundation & Infrastructure** to begin building your MCP server implementation.
 
 ---
 
 ## Document Status
 
 - **Part:** 1 of 5
-- **Version:** 1.0
-- **Last Updated:** January 29, 2026
+- **Version:** 1.1
+- **Last Updated:** February 3, 2026
 - **Status:** Complete
