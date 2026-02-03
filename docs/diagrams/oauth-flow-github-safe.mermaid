@@ -1,0 +1,54 @@
+sequenceDiagram
+    participant SN as ServiceNow
+    participant MCP as MCP Server
+    participant Redis as Token Blacklist
+    participant LLM as Local LLM
+
+    Note over SN,MCP: Step 1: Dynamic Client Registration
+    SN->>MCP: POST /register
+    Note right of SN: client_name, redirect_uris, use_pkce
+    MCP->>MCP: Generate client_id and client_secret
+    MCP-->>SN: 201 Created (client_id, client_secret)
+
+    Note over SN,MCP: Step 2: Authorization Request with PKCE
+    SN->>SN: Generate code_verifier
+    SN->>SN: Create code_challenge = SHA256(code_verifier)
+    SN->>MCP: GET /oauth/authorize
+    Note right of SN: client_id, redirect_uri, code_challenge, method: S256
+    MCP->>MCP: Validate client and PKCE params
+    MCP->>MCP: Generate authorization code
+    MCP-->>SN: 302 Redirect with code
+
+    Note over SN,MCP: Step 3: Token Exchange
+    SN->>MCP: POST /oauth/token
+    Note right of SN: grant_type, code, client credentials, code_verifier
+    MCP->>MCP: Validate client credentials
+    MCP->>MCP: Verify PKCE: SHA256(code_verifier) == code_challenge
+    MCP->>MCP: Generate JWT access_token and refresh_token
+    MCP-->>SN: 200 OK (access_token, refresh_token)
+
+    Note over SN,MCP: Step 4: MCP Request Authenticated
+    SN->>MCP: POST /mcp (Authorization: Bearer JWT)
+    MCP->>MCP: Validate JWT signature and expiration
+    MCP->>Redis: Check if token blacklisted
+    Redis-->>MCP: Not blacklisted
+    MCP->>LLM: Execute tool operation
+    LLM-->>MCP: Result
+    MCP-->>SN: 200 OK (MCP Response)
+
+    Note over SN,MCP: Step 5: Token Refresh
+    SN->>MCP: POST /oauth/token (grant_type: refresh_token)
+    MCP->>MCP: Validate refresh_token JWT
+    MCP->>Redis: Check if refresh_token blacklisted
+    Redis-->>MCP: Not blacklisted
+    MCP->>MCP: Generate new tokens
+    MCP->>Redis: Blacklist old refresh_token
+    MCP-->>SN: 200 OK (new tokens)
+
+    Note over SN,MCP: Step 6: Token Revocation
+    SN->>MCP: POST /oauth/revoke
+    Note right of SN: token, client_id, client_secret
+    MCP->>MCP: Validate client credentials
+    MCP->>Redis: Add token to blacklist with TTL
+    Redis-->>MCP: Token blacklisted
+    MCP-->>SN: 200 OK
