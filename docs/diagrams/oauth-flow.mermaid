@@ -1,75 +1,60 @@
 sequenceDiagram
-    participant SN as ServiceNow Instance
+    participant SN as ServiceNow
     participant MCP as MCP Server
-    participant Redis as Redis (Token Blacklist)
-    
-    Note over SN,MCP: STEP 1: Client Registration (One-Time Setup)
-    
-    SN->>MCP: POST /register<br/>Authorization: Bearer DCR_TOKEN<br/>Body: {client_name, redirect_uris}
-    activate MCP
-    MCP->>MCP: Generate client_id & client_secret
-    MCP->>MCP: Store client in registry
-    MCP-->>SN: 200 OK<br/>{client_id, client_secret}
-    deactivate MCP
-    Note over SN: Store credentials in<br/>oauth_credential table
-    
-    Note over SN,MCP: STEP 2: Authorization Request
-    
-    SN->>SN: Generate code_verifier (random)
-    SN->>SN: Compute code_challenge = SHA256(code_verifier)
-    SN->>MCP: GET /oauth/authorize?<br/>client_id, redirect_uri,<br/>code_challenge, code_challenge_method=S256
-    activate MCP
-    MCP->>MCP: Validate client_id & redirect_uri
-    MCP->>MCP: Validate PKCE parameters
-    MCP->>MCP: Generate authorization code
-    MCP->>MCP: Store code + code_challenge
-    MCP-->>SN: 302 Redirect<br/>Location: redirect_uri?code=AUTH_CODE
-    deactivate MCP
-    
-    Note over SN,MCP: STEP 3: Token Exchange
-    
-    SN->>MCP: POST /oauth/token<br/>grant_type=authorization_code<br/>code, client_id, client_secret, code_verifier
-    activate MCP
-    MCP->>MCP: Validate client credentials
-    MCP->>MCP: Validate authorization code
-    MCP->>MCP: Validate PKCE:<br/>SHA256(code_verifier) == code_challenge
-    MCP->>MCP: Delete auth code (single-use)
-    MCP->>MCP: Generate JWT access & refresh tokens
-    MCP-->>SN: 200 OK<br/>{access_token (JWT), refresh_token (JWT)}
-    deactivate MCP
-    Note over SN: Store tokens in<br/>oauth_credential table
-    
-    Note over SN,MCP: STEP 4: Authenticated MCP Requests
-    
-    SN->>MCP: POST /mcp<br/>Authorization: Bearer ACCESS_TOKEN<br/>Body: {method: "tools/call", params}
-    activate MCP
-    MCP->>MCP: Extract Bearer token
-    MCP->>MCP: Verify JWT signature
-    MCP->>MCP: Check expiration
-    MCP->>Redis: Check if token revoked
-    Redis-->>MCP: Not revoked
-    MCP->>MCP: Execute tool
-    MCP-->>SN: 200 OK<br/>{jsonrpc: "2.0", result}
-    deactivate MCP
-    
-    Note over SN,MCP: STEP 5: Token Refresh
-    
-    SN->>MCP: POST /oauth/token<br/>grant_type=refresh_token<br/>refresh_token, client_id, client_secret
-    activate MCP
-    MCP->>MCP: Validate refresh token (JWT)
-    MCP->>MCP: Validate client credentials
-    MCP->>Redis: Revoke old refresh token (jti)
-    MCP->>MCP: Generate new access & refresh tokens
-    MCP->>MCP: Increment rotation_count
-    MCP-->>SN: 200 OK<br/>{access_token (new), refresh_token (new)}
-    deactivate MCP
-    
-    Note over SN,MCP: STEP 6: Token Revocation (Optional)
-    
-    SN->>MCP: POST /oauth/revoke<br/>Body: {token, client_id, client_secret}
-    activate MCP
-    MCP->>MCP: Decode JWT to get jti
-    MCP->>Redis: Add jti to blacklist with TTL
-    Redis-->>MCP: Stored
-    MCP-->>SN: 200 OK<br/>{}
-    deactivate MCP
+    participant Redis as Token Blacklist
+    participant LLM as Local LLM
+
+    Note over SN,MCP: Step 1: Dynamic Client Registration (DCR)
+    SN->>MCP: POST /register
+    Note right of SN: client_name<br/>redirect_uris<br/>use_pkce: true
+    MCP->>MCP: Generate client_id<br/>Generate client_secret
+    MCP-->>SN: 201 Created
+    Note left of MCP: client_id<br/>client_secret<br/>(RFC 7591)
+
+    Note over SN,MCP: Step 2: Authorization Request (with PKCE)
+    SN->>SN: Generate code_verifier
+    SN->>SN: Create code_challenge<br/>= SHA256(code_verifier)
+    SN->>MCP: GET /oauth/authorize
+    Note right of SN: client_id<br/>redirect_uri<br/>code_challenge<br/>code_challenge_method: S256
+    MCP->>MCP: Validate client_id<br/>Validate PKCE params<br/>Generate auth code
+    MCP-->>SN: 302 Redirect
+    Note left of MCP: redirect_uri?code=xyz&state=abc
+
+    Note over SN,MCP: Step 3: Token Exchange
+    SN->>MCP: POST /oauth/token
+    Note right of SN: grant_type: authorization_code<br/>code: xyz<br/>client_id<br/>client_secret<br/>code_verifier<br/>redirect_uri
+    MCP->>MCP: Validate client credentials<br/>Validate authorization code
+    MCP->>MCP: Verify PKCE:<br/>SHA256(code_verifier)<br/>== stored code_challenge
+    MCP->>MCP: Generate JWT access_token<br/>Generate JWT refresh_token
+    MCP-->>SN: 200 OK
+    Note left of MCP: access_token (JWT)<br/>refresh_token (JWT)<br/>expires_in: 3600<br/>token_type: Bearer
+
+    Note over SN,MCP: Step 4: MCP Request (Authenticated)
+    SN->>MCP: POST /mcp
+    Note right of SN: Authorization: Bearer {JWT}<br/>MCP Protocol Request
+    MCP->>MCP: Validate JWT signature<br/>Check expiration<br/>Check blacklist
+    MCP->>Redis: Check if token blacklisted
+    Redis-->>MCP: Not blacklisted
+    MCP->>LLM: Execute tool/operation
+    LLM-->>MCP: Result
+    MCP-->>SN: 200 OK
+    Note left of MCP: MCP Protocol Response
+
+    Note over SN,MCP: Step 5: Token Refresh
+    SN->>MCP: POST /oauth/token
+    Note right of SN: grant_type: refresh_token<br/>refresh_token (JWT)<br/>client_id<br/>client_secret
+    MCP->>MCP: Validate client credentials<br/>Validate refresh_token JWT
+    MCP->>Redis: Check if refresh_token blacklisted
+    Redis-->>MCP: Not blacklisted
+    MCP->>MCP: Generate new access_token<br/>Generate new refresh_token
+    MCP->>Redis: Blacklist old refresh_token
+    MCP-->>SN: 200 OK
+    Note left of MCP: new access_token (JWT)<br/>new refresh_token (JWT)<br/>expires_in: 3600
+
+    Note over SN,MCP: Step 6: Token Revocation
+    SN->>MCP: POST /oauth/revoke
+    Note right of SN: token (access or refresh)<br/>client_id<br/>client_secret
+    MCP->>MCP: Validate client credentials<br/>Decode token (no verify)
+    MCP->>Redis: Add token to blacklist<br/>TTL = token expiration
+    Redis-->>MCP: Token blacklisted
+    MCP-->>SN: 200 OK

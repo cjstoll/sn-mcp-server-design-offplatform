@@ -46,18 +46,53 @@ ServiceNow handles user authentication, while the MCP server manages client auth
 3. ServiceNow includes token in subsequent MCP requests
 4. MCP server validates token and routes to AI services
 
+## Documentation
+
+### Implementation Guides
+
+Complete implementation walkthrough (7,800 lines across 5 parts):
+
+- **[Part 1: Overview](docs/MCP%20Server%20Implementation%20-%20Part%201%20Overview.md)** - Introduction & Requirements
+- **[Part 2: Core Infrastructure](docs/MCP%20Server%20Implementation%20-%20Part%202%20Core%20Infrastructure.md)** - Server Foundation & Infrastructure
+- **[Part 3: Protocol and Tools](docs/MCP%20Server%20Implementation%20-%20Part%203%20Protocol%20and%20Tools.md)** - MCP Protocol & Tools Implementation
+- **[Part 4: OAuth](docs/MCP%20Server%20Implementation%20-%20Part%204%20OAuth.md)** - OAuth 2.1 Authentication & Security
+- **[Part 5: Appendices](docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md)** - Production Deployment & Operations
+
+### Reference Materials
+
+**Code Templates** (all in `templates/` folder)
+
+All templates follow the naming convention: `mcp-server-[language]-template.[ext]`
+
+- **[Pseudocode Template](templates/mcp-server-pseudocode-template.md)**: Language-agnostic reference implementation
+- **[JavaScript Template](templates/mcp-server-javascript-template.js)**: Local/VM deployment
+- **[TypeScript Template](templates/mcp-server-typescript-template.ts)**: Google Cloud deployment
+- **[Python Template](templates/mcp-server-python-template.py)**: FastAPI implementation
+
+**Implementation Hints**
+
+- **[Implementation Hints](docs/MCP%20Server%20Implementation%20-%20Implementation%20Hints.md)**: Guidance for Go, Java, C#, Rust, and other languages
+
+### Diagrams & Visuals
+
+- **[Diagrams](docs/diagrams/)**: OAuth flow diagrams and architecture visuals
+- **[OAuth Flow Diagram](docs/diagrams/View_Diagram.md)**: Interactive OAuth 2.1 + PKCE sequence diagram
+- **[Presentation Materials](docs/presentations/)**: Conference and training presentations
+
+
 ## Quick Start
 
 ### Prerequisites
+
+ServiceNow instance with AI Platform enabled
 
 Choose your implementation language:
 - **JavaScript/Node.js**: Node.js 18+ (local deployment)
 - **TypeScript**: Node.js 18+ (Google Cloud Run optimized)
 - **Python**: Python 3.9+ (FastAPI-based)
 
-Additional requirements (all implementations):
+Additional solutions/resources referenced (all implementations):
 - Redis (for token blacklist persistence)
-- ServiceNow instance with AI Platform enabled
 - Local LLM infrastructure (Ollama, llama.cpp, etc.)
 
 ### JavaScript/Node.js (Local Deployment)
@@ -111,38 +146,6 @@ pip install fastapi uvicorn pyjwt cryptography python-multipart
 uvicorn main:app --host 0.0.0.0 --port 3000 --reload
 ```
 
-## Documentation
-
-### Implementation Guides
-
-Complete implementation walkthrough (7,800 lines across 5 parts):
-
-- **[Part 1: Overview](docs/MCP%20Server%20Implementation%20-%20Part%201%20Overview.md)** - Introduction & Requirements
-- **[Part 2: Core Infrastructure](docs/MCP%20Server%20Implementation%20-%20Part%202%20Core%20Infrastructure.md)** - Server Foundation & Infrastructure
-- **[Part 3: Protocol and Tools](docs/MCP%20Server%20Implementation%20-%20Part%203%20Protocol%20and%20Tools.md)** - MCP Protocol & Tools Implementation
-- **[Part 4: OAuth](docs/MCP%20Server%20Implementation%20-%20Part%204%20OAuth.md)** - OAuth 2.1 Authentication & Security
-- **[Part 5: Appendices](docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md)** - Production Deployment & Operations
-
-### Reference Materials
-
-**Code Templates** (all in `templates/` folder)
-
-All templates follow the naming convention: `mcp-server-[language]-template.[ext]`
-
-- **[Pseudocode Template](templates/mcp-server-pseudocode-template.md)**: Language-agnostic reference implementation
-- **[JavaScript Template](templates/mcp-server-javascript-template.js)**: Local/VM deployment
-- **[TypeScript Template](templates/mcp-server-typescript-template.ts)**: Google Cloud deployment
-- **[Python Template](templates/mcp-server-python-template.py)**: FastAPI implementation
-
-**Implementation Hints**
-
-- **[Implementation Hints](docs/MCP%20Server%20Implementation%20-%20Implementation%20Hints.md)**: Guidance for Go, Java, C#, Rust, and other languages
-
-### Diagrams & Visuals
-
-- **[Diagrams](docs/diagrams/)**: OAuth flow diagrams and architecture visuals
-- **[Presentation Materials](docs/presentations/)**: Conference and training presentations
-
 ## Deployment Options
 
 ### Local Infrastructure
@@ -184,7 +187,7 @@ Typical response times for production deployment:
 
 ## Compatibility
 
-- **ServiceNow**: Tokyo release and later with AI Platform
+- **ServiceNow**: Yokohama (Patch 9) release and later with AI Platform (latest Zurich release - Recommended)
 - **MCP Specification**: JSON-RPC 2.0 protocol
 - **Languages**: JavaScript (Node.js 18.x+), TypeScript, Python (3.9+)
 - **Storage**: Redis 6.x+, PostgreSQL, Firestore, or file-based
