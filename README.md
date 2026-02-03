@@ -1,6 +1,6 @@
-# ServiceNow MCP Server
+# ServiceNow Agent Fabric - Off Platform MCP Servers
 
-Production-ready Model Context Protocol (MCP) server implementation for ServiceNow integration with locally-hosted AI services and LLMs.
+Production-ready Model Context Protocol (MCP) server implementation of hosted AI services and LLMs for integration to ServiceNow AI Platform instances.
 
 ## Overview
 
@@ -76,7 +76,6 @@ All templates follow the naming convention: `mcp-server-[language]-template.[ext
 ### Diagrams & Visuals
 
 - **[Diagrams](docs/diagrams/)**: OAuth flow diagrams and architecture visuals
-- **[OAuth Flow Diagram](docs/diagrams/View_Diagram.md)**: Interactive OAuth 2.1 + PKCE sequence diagram
 - **[Presentation Materials](docs/presentations/)**: Conference and training presentations
 
 
