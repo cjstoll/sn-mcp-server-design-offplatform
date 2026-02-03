@@ -67,21 +67,29 @@ Additional requirements (all implementations):
 git clone https://github.com/[username]/servicenow-mcp-server.git
 cd servicenow-mcp-server
 
-# Install dependencies
-cd implementations/javascript-local
-npm install
+# Use the JavaScript template
+cp templates/mcp-server-javascript-template.js server.js
+
+# Install dependencies (you'll need to create package.json)
+npm install express jsonwebtoken ioredis cors
 
 # Configure environment
-cp config/template.env .env
-# Edit .env with your ServiceNow instance details
+# Create .env file with your ServiceNow instance details
 
 # Start server
-npm start
+node server.js
 ```
 
 ### TypeScript (Google Cloud Deployment)
 
-See [implementations/typescript-gcp/README.md](implementations/typescript-gcp/README.md) for Cloud Run deployment instructions.
+The TypeScript template is optimized for Google Cloud Run. See [Google Cloud Run documentation](https://cloud.google.com/run/docs/quickstarts/deploy-container) for deployment instructions.
+
+```bash
+# Use the TypeScript template
+cp templates/mcp-server-typescript-template.ts src/index.ts
+
+# Follow Google Cloud Run deployment guide
+```
 
 ### Python (FastAPI)
 
@@ -90,40 +98,49 @@ See [implementations/typescript-gcp/README.md](implementations/typescript-gcp/RE
 git clone https://github.com/[username]/servicenow-mcp-server.git
 cd servicenow-mcp-server
 
+# Use the Python template
+cp templates/mcp-server-python-template.py main.py
+
 # Install dependencies
-cd implementations/python-fastapi
-pip install -r requirements.txt
+pip install fastapi uvicorn pyjwt cryptography python-multipart
 
 # Configure environment
-cp config/template.env .env
-# Edit .env with your ServiceNow instance details
+# Create .env file with your ServiceNow instance details
 
 # Start server
-uvicorn src.main:app --host 0.0.0.0 --port 3000 --reload
+uvicorn main:app --host 0.0.0.0 --port 3000 --reload
 ```
 
 ## Documentation
 
 ### Implementation Guides
 
-- **[5-Part Comprehensive Guide](docs/implementation-guide/)**: Complete implementation walkthrough (7,800 lines)
-  - Part 1: Introduction & Requirements
-  - Part 2: Server Foundation & Infrastructure
-  - Part 3: MCP Protocol & Tools Implementation
-  - Part 4: OAuth 2.1 Authentication & Security
-  - Part 5: Production Deployment & Operations
+Complete implementation walkthrough (7,800 lines across 5 parts):
+
+- **[Part 1: Overview](docs/MCP%20Server%20Implementation%20-%20Part%201%20Overview.md)** - Introduction & Requirements
+- **[Part 2: Core Infrastructure](docs/MCP%20Server%20Implementation%20-%20Part%202%20Core%20Infrastructure.md)** - Server Foundation & Infrastructure
+- **[Part 3: Protocol and Tools](docs/MCP%20Server%20Implementation%20-%20Part%203%20Protocol%20and%20Tools.md)** - MCP Protocol & Tools Implementation
+- **[Part 4: OAuth](docs/MCP%20Server%20Implementation%20-%20Part%204%20OAuth.md)** - OAuth 2.1 Authentication & Security
+- **[Part 5: Appendices](docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md)** - Production Deployment & Operations
 
 ### Reference Materials
 
-- **[Pseudocode Template](docs/pseudocode-template.md)**: Language-agnostic reference implementation
-- **[Language Implementation Hints](docs/language-hints.md)**: Guidance for Go, Java, C#, Rust
-- **[ServiceNow Integration Guide](docs/servicenow-integration.md)**: ServiceNow-specific configuration
-- **[FAQ](docs/faq.md)**: Common questions and answers
-- **[Architecture Overview](docs/architecture.md)**: System design and components
+**Code Templates** (all in `templates/` folder)
+
+All templates follow the naming convention: `mcp-server-[language]-template.[ext]`
+
+- **[Pseudocode Template](templates/mcp-server-pseudocode-template.md)**: Language-agnostic reference implementation
+- **[JavaScript Template](templates/mcp-server-javascript-template.js)**: Local/VM deployment
+- **[TypeScript Template](templates/mcp-server-typescript-template.ts)**: Google Cloud deployment
+- **[Python Template](templates/mcp-server-python-template.py)**: FastAPI implementation
+
+**Implementation Hints**
+
+- **[Implementation Hints](docs/MCP%20Server%20Implementation%20-%20Implementation%20Hints.md)**: Guidance for Go, Java, C#, Rust, and other languages
 
 ### Diagrams & Visuals
 
-- **[OAuth Flow Diagram](docs/diagrams/oauth-flow.svg)**: Complete OAuth 2.1 + PKCE flow visualization
+- **[Diagrams](docs/diagrams/)**: OAuth flow diagrams and architecture visuals
 - **[Presentation Materials](docs/presentations/)**: Conference and training presentations
 
 ## Deployment Options
@@ -133,12 +150,15 @@ uvicorn src.main:app --host 0.0.0.0 --port 3000 --reload
 - Ollama for local LLM inference
 - PM2 for process management
 - External access via Cloudflare tunnel
+- Use the JavaScript template as starting point
 
 ### Google Cloud
 - Cloud Run for serverless deployment
 - Memorystore for Redis
 - Secret Manager for credentials
 - Cloud Load Balancing
+- See [Google Cloud Run documentation](https://cloud.google.com/run/docs) for deployment guide
+- Use the TypeScript template as starting point
 
 ### Hybrid
 - Local LLM processing
