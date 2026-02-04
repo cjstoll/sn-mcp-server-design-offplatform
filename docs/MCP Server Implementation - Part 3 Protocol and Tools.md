@@ -37,6 +37,8 @@ Part 2 established the server infrastructure (HTTP server, middleware, configura
 
 Part 4 will add the OAuth 2.1 security layer (the "roof") that protects the MCP protocol and tools implemented in this part.
 
+💡 **NOTE:** Code examples use pseudocode for language independence. See production templates: [JavaScript](../templates/mcp-server-javascript-template.js) | [TypeScript](../templates/mcp-server-typescript-template.ts) | [Python](../templates/mcp-server-python-template.py) | [Other Languages](MCP%20Server%20Implementation%20-%20Implementation%20Hints.md)
+
 ---
 
 ## MCP Protocol Implementation

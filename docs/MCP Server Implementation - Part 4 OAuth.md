@@ -36,6 +36,8 @@ Part 2 established the server foundation (HTTP server, middleware, configuration
 
 By completing this part, ServiceNow can securely connect to your MCP server and execute tools on behalf of authenticated users.
 
+💡 **NOTE:** Code examples use pseudocode for language independence. See production templates: [JavaScript](../templates/mcp-server-javascript-template.js) | [TypeScript](../templates/mcp-server-typescript-template.ts) | [Python](../templates/mcp-server-python-template.py) | [Other Languages](MCP%20Server%20Implementation%20-%20Implementation%20Hints.md)
+
 ---
 
 ## OAuth 2.1 Architecture Overview

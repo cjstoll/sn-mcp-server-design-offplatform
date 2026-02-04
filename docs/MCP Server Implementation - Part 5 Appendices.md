@@ -40,19 +40,22 @@ This document provides supplemental guidance and best practices that complement 
 The following reference files accompany this documentation:
 
 **Production-Ready Templates** (located in `../templates/` folder):
-- [mcp-server-javascript-template.js](../templates/mcp-server-javascript-template.js) - Local VM deployment (JavaScript) with file-based client storage, Redis token blacklist, and all documentation compliance features
-- [mcp-server-typescript-template.ts](../templates/mcp-server-typescript-template.ts) - Google Cloud deployment (TypeScript) with Firestore client storage, in-memory token blacklist, and compliance features
-- [mcp-server-python-template.py](../templates/mcp-server-python-template.py) - FastAPI implementation with in-memory storage and production migration notes
-- [mcp-server-pseudocode-template.md](../templates/mcp-server-pseudocode-template.md) - Language-agnostic reference implementation
+- [mcp-server-pseudocode-template.md](../templates/mcp-server-pseudocode-template.md) - Language-agnostic reference
+- [mcp-server-javascript-template.js](../templates/mcp-server-javascript-template.js) - JavaScript/Node.js (Local/VM implementation)
+- [mcp-server-typescript-template.ts](../templates/mcp-server-typescript-template.ts) - Typescript (Google Cloud implementation)
+- [mcp-server-python-template.py](../templates/mcp-server-python-template.py) - Python (FastAPI implementation)
 
 **Configuration Templates** (located in `../templates/` folder):
 - [.env.template.txt](../templates/.env.template.txt) - Comprehensive environment variable reference (all implementations)
 - [.env.example.txt](../templates/.env.example.txt) - Detailed example with Local VM/JavaScript implementation focus
 
+💡 **NOTE:** Copy either template to `.env` in your project root and configure with your specific values. The `.txt` extension prevents markdown rendering issues when viewing on GitHub.
+
 **Visual Resources** (located in `diagrams/` folder):
 - [View_Diagram.md](diagrams/View_Diagram.md) - Interactive OAuth 2.1 + PKCE flow (GitHub-rendered Mermaid)
 - [oauth-flow-github-safe.mermaid](diagrams/oauth-flow-github-safe.mermaid) - Simplified Mermaid diagram (GitHub-compatible)
 - [oauth-flow.mermaid](diagrams/oauth-flow.mermaid) - Detailed Mermaid diagram (for local editing with multi-line notes)
+- [oauth-flow.svg](diagrams/oauth-flow.svg) - Detailed diagram (SVG format)
 
 **Implementation Comparison:**
 

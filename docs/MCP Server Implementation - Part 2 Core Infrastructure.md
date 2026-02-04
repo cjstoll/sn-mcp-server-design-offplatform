@@ -45,6 +45,8 @@ The foundation is organized in the order you should implement it:
 
 This order ensures each component builds upon the previous ones.
 
+💡 **NOTE:** Code examples use pseudocode for language independence. See production templates: [JavaScript](../templates/mcp-server-javascript-template.js) | [TypeScript](../templates/mcp-server-typescript-template.ts) | [Python](../templates/mcp-server-python-template.py) | [Other Languages](MCP%20Server%20Implementation%20-%20Implementation%20Hints.md)
+
 ---
 
 ## Server Foundation - Core Infrastructure Setup
