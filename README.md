@@ -5,7 +5,7 @@ Production-ready guidance for Model Context Protocol (MCP) server implementation
 
 💡**NOTE:** This is not about setting up MCP Server(s) within a ServiceNow instance aka ON PLATFORM.
 
-TL;DR - If you are not interested in the creation, thought, and work that went into this then **[Go Here](deployment/DEPLOYMENT_GUIDE.md)** an just dive into the the deployment steps.
+TL;DR - If you are not interested in the creation, thought, and work that went into this then **[Go Here](deployment/README.md)** an just dive into the the deployment steps.
 
 ---
 
