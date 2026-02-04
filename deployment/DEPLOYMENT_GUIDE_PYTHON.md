@@ -82,6 +82,10 @@ pip install watchfiles  # For auto-reload
 
 ### 1.4 Configure Environment Variables
 
+**Reference files available:**
+- [`env.template.txt`](../templates/env.template.txt) - Clean template with variable names only
+- [`env.example.txt`](../templates/env.example.txt) - Populated example with sample values
+
 **Create `.env` file:**
 
 ```bash
@@ -853,7 +857,7 @@ jupyter notebook mcp-deployment-exploration.ipynb
 - [Part 5: Appendices](../docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md) - Storage options and production checklist
 
 **Template:**
-- `../templates/mcp-server-python-template.py` - Complete reference implementation
+- [`mcp-server-python-template.py`](../templates/mcp-server-python-template.py) - Complete reference implementation
 
 **Python Resources:**
 - [FastAPI Documentation](https://fastapi.tiangolo.com/)

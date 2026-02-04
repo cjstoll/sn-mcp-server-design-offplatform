@@ -71,6 +71,10 @@ npm install
 
 ### 1.3 Configure Environment Variables
 
+**Reference files available:**
+- [`env.template.txt`](../templates/env.template.txt) - Clean template with variable names only
+- [`env.example.txt`](../templates/env.example.txt) - Populated example with sample values
+
 **Create `.env` file with JavaScript-specific values:**
 
 ```bash
@@ -518,7 +522,7 @@ Start with: `pm2 start ecosystem.config.js`
 - [Part 5: Appendices](../docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md) - Storage options and production checklist
 
 **Template:**
-- `../templates/mcp-server-javascript-template.js` - Complete reference implementation
+- [`mcp-server-javascript-template.js`](../templates/mcp-server-javascript-template.js) - Complete reference implementation
 
 ---
 

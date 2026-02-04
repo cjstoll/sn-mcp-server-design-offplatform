@@ -109,6 +109,10 @@ npm install
 
 ### 1.3 Configure Environment Variables
 
+**Reference files available:**
+- [`env.template.txt`](../templates/env.template.txt) - Clean template with variable names only
+- [`env.example.txt`](../templates/env.example.txt) - Populated example with sample values
+
 **Create `.env` file (same as JavaScript):**
 
 ```bash
@@ -742,7 +746,7 @@ docker run -p 8080:8080 --env-file .env mcp-server
 - [Part 5: Appendices](../docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md) - Storage options and production checklist
 
 **Template:**
-- `../templates/mcp-server-typescript-template.ts` - Complete reference implementation
+- [`mcp-server-typescript-template.ts`](../templates/mcp-server-typescript-template.ts) - Complete reference implementation
 
 **TypeScript Resources:**
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)

@@ -59,6 +59,10 @@ GENERATE DCR_AUTH_TOKEN (minimum 32 characters):
 
 Create environment configuration file with these required settings. This configuration tells your server how to authenticate requests, where to store data, and which ServiceNow instances to trust.
 
+**Reference files available:**
+- [`env.template.txt`](../templates/env.template.txt) - Clean template with variable names only
+- [`env.example.txt`](../templates/env.example.txt) - Populated example with sample values
+
 ```pseudocode
 REQUIRED CONFIGURATION:
   PORT = 8080 (or your preferred port)
