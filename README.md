@@ -298,6 +298,7 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) for deta
 ## Related Content
 
 - [Anthropic MCP Specification](https://github.com/anthropics/mcp)
+- [ServiceNow Documentation](https://www.servicenow.com/docs/)
 - [ServiceNow Developer Documentation](https://developer.servicenow.com/)
 - [Ollama](https://ollama.ai/) - Local LLM runtime
 
