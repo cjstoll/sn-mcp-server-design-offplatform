@@ -113,162 +113,66 @@ The MCP server trusts ServiceNow as an authenticated client to enforce user-leve
 
 **OAuth 2.1 Flow Diagram**
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    OAuth 2.1 with PKCE Flow for ServiceNow                  │
-└─────────────────────────────────────────────────────────────────────────────┘
+For a detailed interactive diagram, see [View_Diagram.md](diagrams/View_Diagram.md).
 
-┌──────────────┐                                              ┌──────────────┐
-│  ServiceNow  │                                              │  MCP Server  │
-│   Instance   │                                              │              │
-└──────┬───────┘                                              └──────┬───────┘
-       │                                                             │
-       │ ┌─────────────────────────────────────────────────────────┐│
-       │ │ STEP 1: Client Registration (One-Time Setup via DCR)    ││
-       │ └─────────────────────────────────────────────────────────┘│
-       │                                                             │
-       │  POST /register                                             │
-       │  Authorization: Bearer {DCR_AUTH_TOKEN}                     │
-       │  Body: { client_name, redirect_uris, grant_types }         │
-       │─────────────────────────────────────────────────────────────>
-       │                                                             │
-       │                  Generate client_id & client_secret         │
-       │                  Store client in registry                   │
-       │                                                             │
-       │  200 OK                                                     │
-       │  { client_id, client_secret, ... }                          │
-       │<─────────────────────────────────────────────────────────────
-       │                                                             │
-       │  [ServiceNow stores credentials in oauth_credential table]  │
-       │                                                             │
-       │ ┌─────────────────────────────────────────────────────────┐│
-       │ │ STEP 2: Authorization Request (Per Authentication)      ││
-       │ └─────────────────────────────────────────────────────────┘│
-       │                                                             │
-       │  [Generate code_verifier (random string)]                   │
-       │  [Compute code_challenge = SHA256(code_verifier)]           │
-       │                                                             │
-       │  GET /oauth/authorize?                                      │
-       │    response_type=code&                                      │
-       │    client_id={client_id}&                                   │
-       │    redirect_uri={redirect_uri}&                             │
-       │    code_challenge={code_challenge}&                         │
-       │    code_challenge_method=S256&                              │
-       │    state={state}                                            │
-       │─────────────────────────────────────────────────────────────>
-       │                                                             │
-       │                  Validate client_id & redirect_uri          │
-       │                  Validate PKCE parameters                   │
-       │                  Generate authorization code                │
-       │                  Store code + code_challenge                │
-       │                                                             │
-       │  302 Redirect                                               │
-       │  Location: {redirect_uri}?code={auth_code}&state={state}    │
-       │<─────────────────────────────────────────────────────────────
-       │                                                             │
-       │  [Receives authorization code]                              │
-       │                                                             │
-       │ ┌─────────────────────────────────────────────────────────┐│
-       │ │ STEP 3: Token Exchange (Per Authentication)             ││
-       │ └─────────────────────────────────────────────────────────┘│
-       │                                                             │
-       │  POST /oauth/token                                          │
-       │  Body: {                                                    │
-       │    grant_type=authorization_code,                           │
-       │    code={auth_code},                                        │
-       │    redirect_uri={redirect_uri},                             │
-       │    client_id={client_id},                                   │
-       │    client_secret={client_secret},                           │
-       │    code_verifier={code_verifier}                            │
-       │  }                                                          │
-       │─────────────────────────────────────────────────────────────>
-       │                                                             │
-       │                  Validate client credentials                │
-       │                  Validate authorization code                │
-       │                  Validate PKCE:                             │
-       │                    SHA256(code_verifier) == code_challenge  │
-       │                  Delete authorization code (single-use)     │
-       │                  Generate JWT access & refresh tokens       │
-       │                                                             │
-       │  200 OK                                                     │
-       │  {                                                          │
-       │    access_token: {JWT},                                     │
-       │    refresh_token: {JWT},                                    │
-       │    token_type: "Bearer",                                    │
-       │    expires_in: 3600                                         │
-       │  }                                                          │
-       │<─────────────────────────────────────────────────────────────
-       │                                                             │
-       │  [ServiceNow stores tokens in oauth_credential table]       │
-       │                                                             │
-       │ ┌─────────────────────────────────────────────────────────┐│
-       │ │ STEP 4: Authenticated MCP Requests (Ongoing)            ││
-       │ └─────────────────────────────────────────────────────────┘│
-       │                                                             │
-       │  POST /mcp                                                  │
-       │  Authorization: Bearer {access_token}                       │
-       │  Body: { method: "tools/call", params: {...} }             │
-       │─────────────────────────────────────────────────────────────>
-       │                                                             │
-       │                  Extract Bearer token                       │
-       │                  Verify JWT signature                       │
-       │                  Check expiration                           │
-       │                  Check not revoked (Redis)                  │
-       │                  Execute tool                               │
-       │                                                             │
-       │  200 OK                                                     │
-       │  { jsonrpc: "2.0", result: {...} }                          │
-       │<─────────────────────────────────────────────────────────────
-       │                                                             │
-       │ ┌─────────────────────────────────────────────────────────┐│
-       │ │ STEP 5: Token Refresh (When Access Token Expires)       ││
-       │ └─────────────────────────────────────────────────────────┘│
-       │                                                             │
-       │  POST /oauth/token                                          │
-       │  Body: {                                                    │
-       │    grant_type=refresh_token,                                │
-       │    refresh_token={refresh_token},                           │
-       │    client_id={client_id},                                   │
-       │    client_secret={client_secret}                            │
-       │  }                                                          │
-       │─────────────────────────────────────────────────────────────>
-       │                                                             │
-       │                  Validate refresh token (JWT)               │
-       │                  Validate client credentials                │
-       │                  Revoke old refresh token (Redis)           │
-       │                  Generate new access & refresh tokens       │
-       │                  Increment rotation_count                   │
-       │                                                             │
-       │  200 OK                                                     │
-       │  {                                                          │
-       │    access_token: {new_JWT},                                 │
-       │    refresh_token: {new_JWT},                                │
-       │    token_type: "Bearer",                                    │
-       │    expires_in: 3600                                         │
-       │  }                                                          │
-       │<─────────────────────────────────────────────────────────────
-       │                                                             │
-       │ ┌─────────────────────────────────────────────────────────┐│
-       │ │ STEP 6: Token Revocation (Optional)                     ││
-       │ └─────────────────────────────────────────────────────────┘│
-       │                                                             │
-       │  POST /oauth/revoke                                         │
-       │  Body: {                                                    │
-       │    token={token_to_revoke},                                 │
-       │    client_id={client_id},                                   │
-       │    client_secret={client_secret}                            │
-       │  }                                                          │
-       │─────────────────────────────────────────────────────────────>
-       │                                                             │
-       │                  Decode JWT to get jti                      │
-       │                  Add jti to Redis blacklist                 │
-       │                  Set TTL = token remaining lifetime         │
-       │                                                             │
-       │  200 OK                                                     │
-       │  {}                                                         │
-       │<─────────────────────────────────────────────────────────────
-       │                                                             │
+```mermaid
+sequenceDiagram
+    participant SN as ServiceNow
+    participant MCP as MCP Server
+    participant Redis as Token Blacklist
+    participant LLM as Local LLM
+
+    Note over SN,MCP: Step 1: Dynamic Client Registration
+    SN->>MCP: POST /register
+    Note right of SN: client_name, redirect_uris, use_pkce
+    MCP->>MCP: Generate client_id and client_secret
+    MCP-->>SN: 201 Created (client_id, client_secret)
+
+    Note over SN,MCP: Step 2: Authorization Request with PKCE
+    SN->>SN: Generate code_verifier
+    SN->>SN: Create code_challenge = SHA256(code_verifier)
+    SN->>MCP: GET /oauth/authorize
+    Note right of SN: client_id, redirect_uri, code_challenge, method: S256
+    MCP->>MCP: Validate client and PKCE params
+    MCP->>MCP: Generate authorization code
+    MCP-->>SN: 302 Redirect with code
+
+    Note over SN,MCP: Step 3: Token Exchange
+    SN->>MCP: POST /oauth/token
+    Note right of SN: grant_type, code, client credentials, code_verifier
+    MCP->>MCP: Validate client credentials
+    MCP->>MCP: Verify PKCE: SHA256(code_verifier) == code_challenge
+    MCP->>MCP: Generate JWT access_token and refresh_token
+    MCP-->>SN: 200 OK (access_token, refresh_token)
+
+    Note over SN,MCP: Step 4: MCP Request Authenticated
+    SN->>MCP: POST /mcp (Authorization: Bearer JWT)
+    MCP->>MCP: Validate JWT signature and expiration
+    MCP->>Redis: Check if token blacklisted
+    Redis-->>MCP: Not blacklisted
+    MCP->>LLM: Execute tool operation
+    LLM-->>MCP: Result
+    MCP-->>SN: 200 OK (MCP Response)
+
+    Note over SN,MCP: Step 5: Token Refresh
+    SN->>MCP: POST /oauth/token (grant_type: refresh_token)
+    MCP->>MCP: Validate refresh_token JWT
+    MCP->>Redis: Check if refresh_token blacklisted
+    Redis-->>MCP: Not blacklisted
+    MCP->>MCP: Generate new tokens
+    MCP->>Redis: Blacklist old refresh_token
+    MCP-->>SN: 200 OK (new tokens)
+
+    Note over SN,MCP: Step 6: Token Revocation
+    SN->>MCP: POST /oauth/revoke
+    Note right of SN: token, client_id, client_secret
+    MCP->>MCP: Validate client credentials
+    MCP->>Redis: Add token to blacklist with TTL
+    Redis-->>MCP: Token blacklisted
+    MCP-->>SN: 200 OK
 ```
+
+💡 **NOTE:** This diagram shows the GitHub-compatible simplified version. For the detailed version with multi-line notes, see [oauth-flow.mermaid](diagrams/oauth-flow.mermaid).
 
 ### Key Components
 
@@ -1032,14 +936,23 @@ END FUNCTION)
 This document has covered the complete OAuth 2.1 implementation for ServiceNow MCP integration:
 
 ✅ **OAuth 2.1 Architecture Overview** - Flow diagram, M2M pattern, PKCE rationale
+
 ✅ **Utility Functions** - Secure token generation, PKCE validation, Base64URL encoding
+
 ✅ **JWT Token Management** - Access token, refresh token creation and validation
+
 ✅ **Authorization Server Metadata** - RFC 8414 discovery endpoint
+
 ✅ **OAuth Protected Resource Metadata** - Resource server discovery
+
 ✅ **Dynamic Client Registration** - RFC 7591 automated client onboarding
+
 ✅ **Authorization Endpoint** - OAuth flow initiation with PKCE
+
 ✅ **Token Endpoint** - Code exchange and refresh token grants
+
 ✅ **Token Revocation Endpoint** - RFC 7009 token invalidation
+
 ✅ **Authentication Middleware** - Bearer token validation for protected routes
 
 **Implementation Notes:**
