@@ -11,7 +11,7 @@ This guide provides JavaScript/Node.js specific instructions for deploying your 
 **Prerequisites:**
 - Reviewed the [Master Deployment Guide](./README.md)
 - Node.js 18.x or higher installed
-- Template file: `../templates/mcp-server-javascript-template.js`
+- Template file: [`mcp-server-javascript-template.js`](../templates/mcp-server-javascript-template.js)
 
 **Approach:** Start with the template file and modify as needed. This guide only covers JavaScript-specific setup and deviations from the template.
 
@@ -412,71 +412,12 @@ curl -X POST http://localhost:8080/mcp \
 
 ### Complete OAuth Flow Test
 
-**1. Register client:**
-```bash
-curl -X POST http://localhost:8080/oauth/register \
-  -H "Authorization: Bearer ${DCR_AUTH_TOKEN}" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "client_name": "Test Client",
-    "redirect_uris": ["http://localhost:3000/callback"]
-  }'
-```
+**For complete step-by-step OAuth 2.1 + PKCE flow testing:**
 
-Save `client_id` and `client_secret` from response.
+See [Master Deployment Guide - Complete OAuth Flow - Executable Commands](./README.md#complete-oauth-flow---executable-commands)
 
-**2. Generate PKCE parameters:**
-```bash
-CODE_VERIFIER=$(openssl rand -base64 32 | tr -d '=+/' | cut -c1-43)
-CODE_CHALLENGE=$(echo -n $CODE_VERIFIER | openssl dgst -sha256 -binary | base64 | tr -d '=' | tr '+/' '-_')
-```
+The master guide provides detailed curl commands with expected responses for all 10 steps of the OAuth flow, from DCR registration through token revocation validation.
 
-**3. Authorization request (open in browser):**
-```
-http://localhost:8080/oauth/authorize?client_id=CLIENT_ID&redirect_uri=http://localhost:3000/callback&response_type=code&code_challenge=$CODE_CHALLENGE&code_challenge_method=S256&state=test
-```
-
-Copy authorization code from redirect URL.
-
-**4. Exchange code for tokens:**
-```bash
-curl -X POST http://localhost:8080/oauth/token \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=authorization_code&code=AUTH_CODE&client_id=CLIENT_ID&client_secret=CLIENT_SECRET&code_verifier=$CODE_VERIFIER&redirect_uri=http://localhost:3000/callback"
-```
-
-Save `access_token` and `refresh_token`.
-
-**5. Test MCP with token:**
-```bash
-curl -X POST http://localhost:8080/mcp \
-  -H "Authorization: Bearer ACCESS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":2}'
-```
-
-**6. Refresh tokens:**
-```bash
-curl -X POST http://localhost:8080/oauth/token \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=refresh_token&refresh_token=REFRESH_TOKEN&client_id=CLIENT_ID&client_secret=CLIENT_SECRET"
-```
-
-**7. Revoke token:**
-```bash
-curl -X POST http://localhost:8080/oauth/revoke \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "token=ACCESS_TOKEN&client_id=CLIENT_ID&client_secret=CLIENT_SECRET"
-```
-
----
-
-## Troubleshooting
-
-### JavaScript-Specific Issues
-
-**"Cannot find module 'X'"**
-- Run `npm install` to install dependencies
 - Check `package.json` includes the required package
 
 **"JWT_SECRET must be at least 32 characters"**
@@ -550,7 +491,7 @@ Start with: `pm2 start ecosystem.config.js`
 **For ServiceNow Integration:**
 - Share DCR_AUTH_TOKEN with ServiceNow team (secure channel)
 - Provide server URL: `https://your-domain.com`
-- Follow [ServiceNow Connection Configuration](../mcp-guide-05-appendices.md#appendix-d-servicenow-connection-configuration)
+- Follow [ServiceNow Connection Configuration](../docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md#appendix-d-servicenow-connection-configuration)
 
 **For Custom Tools:**
 - Add tool definitions to `getToolDefinitions()` in template
@@ -570,10 +511,11 @@ Start with: `pm2 start ecosystem.config.js`
 - [Master Deployment Guide](./README.md) - Complete deployment workflow and concepts
 
 **Detailed Implementation:**
-- [Part 2: Server Foundation](../mcp-guide-02-server-foundation.md) - Infrastructure details
-- [Part 3: MCP Protocol](../mcp-guide-03-mcp-protocol-tools.md) - Protocol implementation
-- [Part 4: OAuth Implementation](../mcp-guide-04-oauth-implementation.md) - OAuth 2.1 security details
-- [Part 5: Appendices](../mcp-guide-05-appendices.md) - Storage options and production checklist
+- [Part 1: Overview](../docs/MCP%20Server%20Implementation%20-%20Part%201%20Overview.md) - Requirements and scope
+- [Part 2: Core Infrastructure](../docs/MCP%20Server%20Implementation%20-%20Part%202%20Core%20Infrastructure.md) - Infrastructure details
+- [Part 3: Protocol and Tools](../docs/MCP%20Server%20Implementation%20-%20Part%203%20Protocol%20and%20Tools.md) - Protocol implementation
+- [Part 4: OAuth](../docs/MCP%20Server%20Implementation%20-%20Part%204%20OAuth.md) - OAuth 2.1 security details
+- [Part 5: Appendices](../docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md) - Storage options and production checklist
 
 **Template:**
 - `../templates/mcp-server-javascript-template.js` - Complete reference implementation

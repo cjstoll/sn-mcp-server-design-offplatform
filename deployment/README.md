@@ -28,7 +28,7 @@ Choose your implementation path based on your environment and expertise:
 | **JavaScript** | `templates/mcp-server-javascript-template.js` | Node.js environments, rapid prototyping, local VM deployment | [JavaScript Guide](./DEPLOYMENT_GUIDE_JAVASCRIPT.md) |
 | **TypeScript** | `templates/mcp-server-typescript-template.ts` | Type-safe production systems, cloud deployments | [TypeScript Guide](./DEPLOYMENT_GUIDE_TYPESCRIPT.md) |
 | **Python** | `templates/mcp-server-python-template.py` | Python toolchains, FastAPI/Flask familiarity | [Python Guide](./DEPLOYMENT_GUIDE_PYTHON.md) |
-| **Other** | See [Language Hints](./language-implementation-hints.md) | Go, Java, C#, Rust | Adapt from [Pseudocode Template](./mcp-server-pseudocode-template.md) |
+| **Other** | See [Language Hints](../docs/MCP%20Server%20Implementation%20-%20Implementation%20Hints.md) | Go, Java, C#, Rust | Adapt from [Pseudocode Template](../templates/mcp-server-pseudocode-template.md) |
 
 ---
 
@@ -831,6 +831,205 @@ STEP 9: Verify revoked token blocked
   VERIFY: Returns 401 Unauthorized (token blacklist works)
 ```
 
+### Complete OAuth Flow - Executable Commands
+
+The following curl commands provide copy-paste ready testing for the complete OAuth 2.1 + PKCE flow. These commands are language-agnostic and work with any implementation.
+
+**1. Register test client via DCR:**
+```bash
+curl -X POST http://localhost:8080/oauth/register \
+  -H "Authorization: Bearer ${DCR_AUTH_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "client_name": "Test Client",
+    "redirect_uris": ["http://localhost:3000/callback"]
+  }'
+```
+
+**Expected response:**
+```json
+{
+  "client_id": "client_...",
+  "client_secret": "...",
+  "client_name": "Test Client",
+  "redirect_uris": ["http://localhost:3000/callback"]
+}
+```
+
+Save `client_id` and `client_secret` for subsequent steps.
+
+**2. Generate PKCE parameters:**
+```bash
+CODE_VERIFIER=$(openssl rand -base64 32 | tr -d '=+/' | cut -c1-43)
+CODE_CHALLENGE=$(echo -n $CODE_VERIFIER | openssl dgst -sha256 -binary | base64 | tr -d '=' | tr '+/' '-_')
+
+echo "Code Verifier: $CODE_VERIFIER"
+echo "Code Challenge: $CODE_CHALLENGE"
+```
+
+**3. Authorization request (open in browser):**
+
+Replace `CLIENT_ID` with your actual client_id:
+```
+http://localhost:8080/oauth/authorize?client_id=CLIENT_ID&redirect_uri=http://localhost:3000/callback&response_type=code&code_challenge=$CODE_CHALLENGE&code_challenge_method=S256&state=test
+```
+
+**Expected:** Browser redirects to `http://localhost:3000/callback?code=...&state=test`
+
+Copy the `code` parameter value - this is your authorization code.
+
+**4. Exchange authorization code for tokens:**
+
+Replace `AUTH_CODE`, `CLIENT_ID`, and `CLIENT_SECRET` with actual values:
+```bash
+curl -X POST http://localhost:8080/oauth/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=authorization_code&code=AUTH_CODE&client_id=CLIENT_ID&client_secret=CLIENT_SECRET&code_verifier=$CODE_VERIFIER&redirect_uri=http://localhost:3000/callback"
+```
+
+**Expected response:**
+```json
+{
+  "access_token": "eyJ...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "eyJ..."
+}
+```
+
+Save `access_token` and `refresh_token`.
+
+**5. Test MCP tools/list with access token:**
+
+Replace `ACCESS_TOKEN` with your actual access token:
+```bash
+curl -X POST http://localhost:8080/mcp \
+  -H "Authorization: Bearer ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":2}'
+```
+
+**Expected response:**
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "tools": [
+      {"name": "echo", "description": "...", "inputSchema": {...}},
+      {"name": "calculate", "description": "...", "inputSchema": {...}}
+    ]
+  },
+  "id": 2
+}
+```
+
+**6. Test tool execution:**
+```bash
+curl -X POST http://localhost:8080/mcp \
+  -H "Authorization: Bearer ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc":"2.0",
+    "method":"tools/call",
+    "params":{
+      "name":"echo",
+      "arguments":{"message":"Hello MCP!"}
+    },
+    "id":3
+  }'
+```
+
+**Expected response:**
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "content": [
+      {"type": "text", "text": "Echo: Hello MCP!"}
+    ]
+  },
+  "id": 3
+}
+```
+
+**7. Refresh tokens:**
+
+Replace `REFRESH_TOKEN`, `CLIENT_ID`, and `CLIENT_SECRET`:
+```bash
+curl -X POST http://localhost:8080/oauth/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=refresh_token&refresh_token=REFRESH_TOKEN&client_id=CLIENT_ID&client_secret=CLIENT_SECRET"
+```
+
+**Expected:** New `access_token` and `refresh_token` returned.
+
+Save the new tokens and note that the old `refresh_token` is now invalid (token rotation).
+
+**8. Verify old refresh token is revoked:**
+```bash
+curl -X POST http://localhost:8080/oauth/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=refresh_token&refresh_token=OLD_REFRESH_TOKEN&client_id=CLIENT_ID&client_secret=CLIENT_SECRET"
+```
+
+**Expected response:**
+```json
+{
+  "error": "invalid_grant",
+  "error_description": "Invalid refresh token"
+}
+```
+
+**9. Revoke access token:**
+
+Replace `ACCESS_TOKEN`, `CLIENT_ID`, and `CLIENT_SECRET`:
+```bash
+curl -X POST http://localhost:8080/oauth/revoke \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "token=ACCESS_TOKEN&client_id=CLIENT_ID&client_secret=CLIENT_SECRET"
+```
+
+**Expected response:**
+```json
+{}
+```
+
+Status: 200 OK (always returns success per RFC 7009)
+
+**10. Verify revoked token cannot be used:**
+```bash
+curl -X POST http://localhost:8080/mcp \
+  -H "Authorization: Bearer ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":4}'
+```
+
+**Expected response:**
+```json
+{
+  "jsonrpc": "2.0",
+  "error": {
+    "code": -32001,
+    "message": "Unauthorized: Token revoked"
+  },
+  "id": 4
+}
+```
+
+Status: 401 Unauthorized
+
+**✅ OAuth 2.1 + PKCE Flow Validated!**
+
+If all steps completed successfully, your implementation correctly handles:
+- Dynamic client registration with DCR protection
+- PKCE challenge/verifier generation and validation
+- Authorization code issuance
+- Token exchange with code verification
+- JWT token creation and validation
+- Authenticated MCP protocol requests
+- Refresh token rotation (old token invalidated)
+- Token revocation with persistent blacklist
+
 ### Production Checklist
 
 Verify production-critical features are configured correctly. These aren't optional - each item on this list prevents a specific category of security or operational problems.
@@ -922,7 +1121,7 @@ TOKEN BLACKLIST: In-memory acceptable
 ```
 
 For detailed storage implementation code, see:
-- [Part 5, Appendix B: Alternative Storage Implementations](./mcp-guide-05-appendices.md#appendix-b-alternative-storage-implementations)
+- [Part 5, Appendix B: Alternative Storage Implementations](../docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md#appendix-b-alternative-storage-implementations)
 
 ---
 
@@ -995,7 +1194,7 @@ Follow these steps in order for a smooth deployment. Each step builds on the pre
    PROVIDE ServiceNow team:
      - MCP server URL (https://your-domain.com)
      - DCR_AUTH_TOKEN (via secure channel)
-   FOLLOW: [ServiceNow Connection Configuration](./mcp-guide-05-appendices.md#appendix-d-servicenow-connection-configuration)
+   FOLLOW: [ServiceNow Connection Configuration](../docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md#appendix-d-servicenow-connection-configuration)
 ```
 
 ### Post-Deployment Monitoring
@@ -1220,7 +1419,7 @@ After successful deployment:
    - Supported OAuth endpoints
 
 2. **ServiceNow team configures MCP connection:**
-   - Follow [ServiceNow Connection Configuration](./mcp-guide-05-appendices.md#appendix-d-servicenow-connection-configuration)
+   - Follow [ServiceNow Connection Configuration](../docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md#appendix-d-servicenow-connection-configuration)
    - Test DCR registration
    - Verify OAuth flow completes
    - Confirm tools visible in AI Agent configuration
@@ -1292,18 +1491,18 @@ Set up the operational practices that keep your server running reliably. Deploym
 
 For detailed implementation guidance, see:
 
-- **[Part 1: Introduction](./mcp-guide-01-introduction.md)** - Requirements, scope, and ServiceNow integration overview
-- **[Part 2: Server Foundation](./mcp-guide-02-server-foundation.md)** - HTTP server setup, middleware, configuration, storage
-- **[Part 3: MCP Protocol & Tools](./mcp-guide-03-mcp-protocol-tools.md)** - MCP endpoint implementation and tool development
-- **[Part 4: OAuth Implementation](./mcp-guide-04-oauth-implementation.md)** - Complete OAuth 2.1 + PKCE implementation details
-- **[Part 5: Appendices](./mcp-guide-05-appendices.md)** - Storage options, deployment checklist, ServiceNow configuration
+- **[Part 1: Overview](../docs/MCP%20Server%20Implementation%20-%20Part%201%20Overview.md)** - Requirements, scope, and ServiceNow integration overview
+- **[Part 2: Core Infrastructure](../docs/MCP%20Server%20Implementation%20-%20Part%202%20Core%20Infrastructure.md)** - HTTP server setup, middleware, configuration, storage
+- **[Part 3: Protocol and Tools](../docs/MCP%20Server%20Implementation%20-%20Part%203%20Protocol%20and%20Tools.md)** - MCP endpoint implementation and tool development
+- **[Part 4: OAuth](../docs/MCP%20Server%20Implementation%20-%20Part%204%20OAuth.md)** - Complete OAuth 2.1 + PKCE implementation details
+- **[Part 5: Appendices](../docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md)** - Storage options, deployment checklist, ServiceNow configuration
 
 For language-specific implementation:
 
-- **[JavaScript Deployment Guide](./deployment/DEPLOYMENT_GUIDE_JAVASCRIPT.md)** - Node.js/Express implementation
-- **[TypeScript Deployment Guide](./deployment/DEPLOYMENT_GUIDE_TYPESCRIPT.md)** - TypeScript/Node.js implementation
-- **[Python Deployment Guide](./deployment/DEPLOYMENT_GUIDE_PYTHON.md)** - Python/FastAPI implementation
-- **[Language Implementation Hints](./language-implementation-hints.md)** - Guidance for Go, Java, C#, Rust
+- **[JavaScript Deployment Guide](./DEPLOYMENT_GUIDE_JAVASCRIPT.md)** - Node.js/Express implementation
+- **[TypeScript Deployment Guide](./DEPLOYMENT_GUIDE_TYPESCRIPT.md)** - TypeScript/Node.js implementation
+- **[Python Deployment Guide](./DEPLOYMENT_GUIDE_PYTHON.md)** - Python/FastAPI implementation
+- **[Language Implementation Hints](../docs/MCP%20Server%20Implementation%20-%20Implementation%20Hints.md)** - Guidance for Go, Java, C#, Rust
 
 ---
 

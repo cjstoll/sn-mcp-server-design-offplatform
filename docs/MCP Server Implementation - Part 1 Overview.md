@@ -55,13 +55,13 @@ This Document Series which is listed (and linked) at the top of each of the docu
 💡 **NOTE:** All implementations follow the same architectural patterns and are fully ServiceNow-compatible.
 
 **Configuration Templates** (located in `../templates/` folder):
-- [.env.template.txt](../templates/.env.template.txt) - Comprehensive environment variable reference (all implementations)
-- [.env.example.txt](../templates/.env.example.txt) - Detailed example with Local VM/JavaScript implementation focus
+- [.env.template.txt](../templates/env.template.txt) - Comprehensive environment variable reference (all implementations)
+- [.env.example.txt](../templates/env.example.txt) - Detailed example with Local VM/JavaScript implementation focus
 
 💡 **NOTE:** Copy either template to `.env` in your project root and configure with your specific values. The `.txt` extension prevents markdown rendering issues when viewing on GitHub.
 
 **Visual Resources** (located in `diagrams/` folder):
-- [View_Diagram.md](diagrams/View_Diagram.md) - Interactive OAuth 2.1 + PKCE flow (GitHub-rendered Mermaid)
+- [View_Diagram.md](diagrams/README.md) - Interactive OAuth 2.1 + PKCE flow (GitHub-rendered Mermaid)
 - [oauth-flow-github-safe.mermaid](diagrams/oauth-flow-github-safe.mermaid) - Simplified Mermaid diagram (GitHub-compatible)
 - [oauth-flow.mermaid](diagrams/oauth-flow.mermaid) - Detailed Mermaid diagram (for local editing with multi-line notes)
 - [oauth-flow.svg](diagrams/oauth-flow.svg) - Detailed diagram (SVG format)

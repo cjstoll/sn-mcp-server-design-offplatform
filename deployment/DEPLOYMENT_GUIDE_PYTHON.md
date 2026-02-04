@@ -11,7 +11,7 @@ This guide provides Python-specific instructions for deploying your MCP server u
 **Prerequisites:**
 - Reviewed the [Master Deployment Guide](./README.md)
 - Python 3.9 or higher installed
-- Template file: `../templates/mcp-server-python-template.py`
+- Template file: [`mcp-server-python-template.py`](../templates/mcp-server-python-template.py)
 
 **Approach:** Start with the template file and modify as needed. This guide only covers Python-specific setup and deviations from the template.
 
@@ -566,7 +566,11 @@ curl -X POST http://localhost:8080/mcp \
 
 ### Complete OAuth Flow Test
 
-**Same commands as JavaScript guide** - See [JavaScript Deployment Guide - Validation](./DEPLOYMENT_GUIDE_JAVASCRIPT.md#validation--testing) for complete OAuth flow testing.
+**For complete step-by-step OAuth 2.1 + PKCE flow testing:**
+
+See [Master Deployment Guide - Complete OAuth Flow - Executable Commands](./README.md#complete-oauth-flow---executable-commands)
+
+The master guide provides detailed curl commands with expected responses for all 10 steps of the OAuth flow, from DCR registration through token revocation validation.
 
 ### Python-Specific Testing
 
@@ -790,7 +794,7 @@ Run: `docker-compose up -d`
 **For ServiceNow Integration:**
 - Share DCR_AUTH_TOKEN with ServiceNow team (secure channel)
 - Provide server URL: `https://your-domain.com`
-- Follow [ServiceNow Connection Configuration](../mcp-guide-05-appendices.md#appendix-d-servicenow-connection-configuration)
+- Follow [ServiceNow Connection Configuration](../docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md#appendix-d-servicenow-connection-configuration)
 
 **For Custom Tools:**
 - Define Pydantic models for tool arguments
@@ -802,7 +806,7 @@ Run: `docker-compose up -d`
 
 The Jupyter notebook provides hands-on OAuth flow testing:
 
-**Location:** `../templates/mcp-deployment-exploration.ipynb`
+**[Interactive Jupyter Notebook](../templates/mcp-deployment-exploration.ipynb)**
 
 **Usage:**
 ```bash
@@ -842,10 +846,11 @@ jupyter notebook mcp-deployment-exploration.ipynb
 - [Master Deployment Guide](./README.md) - Complete deployment workflow and concepts
 
 **Detailed Implementation:**
-- [Part 2: Server Foundation](../mcp-guide-02-server-foundation.md) - Infrastructure details
-- [Part 3: MCP Protocol](../mcp-guide-03-mcp-protocol-tools.md) - Protocol implementation
-- [Part 4: OAuth Implementation](../mcp-guide-04-oauth-implementation.md) - OAuth 2.1 security details
-- [Part 5: Appendices](../mcp-guide-05-appendices.md) - Storage options and production checklist
+- [Part 1: Overview](../docs/MCP%20Server%20Implementation%20-%20Part%201%20Overview.md) - Requirements and scope
+- [Part 2: Core Infrastructure](../docs/MCP%20Server%20Implementation%20-%20Part%202%20Core%20Infrastructure.md) - Infrastructure details
+- [Part 3: Protocol and Tools](../docs/MCP%20Server%20Implementation%20-%20Part%203%20Protocol%20and%20Tools.md) - Protocol implementation
+- [Part 4: OAuth](../docs/MCP%20Server%20Implementation%20-%20Part%204%20OAuth.md) - OAuth 2.1 security details
+- [Part 5: Appendices](../docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md) - Storage options and production checklist
 
 **Template:**
 - `../templates/mcp-server-python-template.py` - Complete reference implementation
