@@ -25,9 +25,9 @@ Choose your implementation path based on your environment and expertise:
 
 | Language | Template File | Best For | Deployment Guide |
 |----------|--------------|----------|------------------|
-| **JavaScript** | `templates/mcp-server-javascript-template.js` | Node.js environments, rapid prototyping, local VM deployment | [JavaScript Guide](./deployment/DEPLOYMENT_GUIDE_JAVASCRIPT.md) |
-| **TypeScript** | `templates/mcp-server-typescript-template.ts` | Type-safe production systems, cloud deployments | [TypeScript Guide](./deployment/DEPLOYMENT_GUIDE_TYPESCRIPT.md) |
-| **Python** | `templates/mcp-server-python-template.py` | Python toolchains, FastAPI/Flask familiarity | [Python Guide](./deployment/DEPLOYMENT_GUIDE_PYTHON.md) |
+| **JavaScript** | `templates/mcp-server-javascript-template.js` | Node.js environments, rapid prototyping, local VM deployment | [JavaScript Guide](./DEPLOYMENT_GUIDE_JAVASCRIPT.md) |
+| **TypeScript** | `templates/mcp-server-typescript-template.ts` | Type-safe production systems, cloud deployments | [TypeScript Guide](./DEPLOYMENT_GUIDE_TYPESCRIPT.md) |
+| **Python** | `templates/mcp-server-python-template.py` | Python toolchains, FastAPI/Flask familiarity | [Python Guide](./DEPLOYMENT_GUIDE_PYTHON.md) |
 | **Other** | See [Language Hints](./language-implementation-hints.md) | Go, Java, C#, Rust | Adapt from [Pseudocode Template](./mcp-server-pseudocode-template.md) |
 
 ---
