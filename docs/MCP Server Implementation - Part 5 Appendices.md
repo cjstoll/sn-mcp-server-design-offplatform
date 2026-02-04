@@ -39,30 +39,35 @@ This document provides supplemental guidance and best practices that complement 
 
 The following reference files accompany this documentation:
 
-**Complete Implementations:**
-- `server-compliant.js` - Local VM deployment (JavaScript) with file-based client storage, Redis token blacklist, and all documentation compliance features
-- `gcp-compliant.ts` - Google Cloud deployment (TypeScript) with Firestore client storage, in-memory token blacklist, and compliance features
+**Production-Ready Templates** (located in `../templates/` folder):
+- [mcp-server-javascript-template.js](../templates/mcp-server-javascript-template.js) - Local VM deployment (JavaScript) with file-based client storage, Redis token blacklist, and all documentation compliance features
+- [mcp-server-typescript-template.ts](../templates/mcp-server-typescript-template.ts) - Google Cloud deployment (TypeScript) with Firestore client storage, in-memory token blacklist, and compliance features
+- [mcp-server-python-template.py](../templates/mcp-server-python-template.py) - FastAPI implementation with in-memory storage and production migration notes
+- [mcp-server-pseudocode-template.md](../templates/mcp-server-pseudocode-template.md) - Language-agnostic reference implementation
 
-**Templates:**
-- `server-example.js` - White-label template with code structure, logging statements, and implementation placeholders
-- `.env.example` - Environment configuration template with all required and optional variables documented
+**Configuration Templates** (located in `../templates/` folder):
+- [.env.template.txt](../templates/.env.template.txt) - Comprehensive environment variable reference (all implementations)
+- [.env.example.txt](../templates/.env.example.txt) - Detailed example with Local VM/JavaScript implementation focus
 
-**Visual Resources:**
-- `oauth-flow-diagram.mermaid` - OAuth 2.1 flow sequence diagram (Mermaid format for GitHub/GitLab)
-- `oauth-flow-diagram.svg` - OAuth 2.1 flow sequence diagram (SVG format for universal compatibility)
+**Visual Resources** (located in `diagrams/` folder):
+- [View_Diagram.md](diagrams/View_Diagram.md) - Interactive OAuth 2.1 + PKCE flow (GitHub-rendered Mermaid)
+- [oauth-flow-github-safe.mermaid](diagrams/oauth-flow-github-safe.mermaid) - Simplified Mermaid diagram (GitHub-compatible)
+- [oauth-flow.mermaid](diagrams/oauth-flow.mermaid) - Detailed Mermaid diagram (for local editing with multi-line notes)
 
 **Implementation Comparison:**
 
-| Aspect | server-compliant.js | gcp-compliant.ts |
-|--------|-------------------|------------------|
-| Language | JavaScript | TypeScript |
-| Platform | Local VM, any Node.js environment | Google Cloud Run optimized |
-| Client Storage | File-based (registered_clients.json) | Google Firestore (NoSQL database) |
-| Token Blacklist | Redis with persistence | In-memory Set (acceptable for auto-scaling) |
-| Tools | LLM (Ollama) + File operations | A2A Agent + Utility tools |
-| Use Case | Local development, on-premises | Cloud-native deployments |
+| Aspect | mcp-server-javascript-template.js | mcp-server-typescript-template.ts | mcp-server-python-template.py |
+|--------|-------------------|------------------|------------------|
+| Language | JavaScript | TypeScript | Python |
+| Platform | Local VM, any Node.js environment | Google Cloud Run optimized | Any Python 3.9+ environment |
+| Client Storage | File-based (registered_clients.json) | Google Firestore (NoSQL database) | In-memory (with DB migration guide) |
+| Token Blacklist | Redis with persistence | In-memory Set (acceptable for auto-scaling) | In-memory (with Redis example) |
+| Tools | LLM (Ollama) + File operations | A2A Agent + Utility tools | Example tools included |
+| Use Case | Local development, on-premises | Cloud-native deployments | FastAPI-based deployments |
 
-Both implementations follow the same architectural patterns and are fully ServiceNow-compatible.
+All implementations follow the same architectural patterns and are fully ServiceNow-compatible.
+
+💡 **NOTE:** Code examples use pseudocode for language independence. See production templates: [JavaScript](../templates/mcp-server-javascript-template.js) | [TypeScript](../templates/mcp-server-typescript-template.ts) | [Python](../templates/mcp-server-python-template.py) | [Other Languages](MCP%20Server%20Implementation%20-%20Implementation%20Hints.md)
 
 ---
 
@@ -152,14 +157,14 @@ Brief description of what this MCP server does and which ServiceNow instance it 
 ## Setup
 
 1. Clone the repository
-2. Copy `.env.example` to `.env` and configure
+2. Copy `.env.template.txt` or `.env.example.txt` to `.env` and configure
 3. Install dependencies: `npm install`
 4. Generate secure secrets (see Security section)
 5. Start the server: `npm start`
 
 ## Configuration
 
-See `.env.example` for all configuration options.
+See `.env.template.txt` for all configuration options.
 
 **Required Environment Variables:**
 - `JWT_SECRET` - 32+ character secret for JWT signing
@@ -209,7 +214,7 @@ Organize your repository for clarity and maintainability:
 
 ```
 mcp-server/
-├── .env.example              # Configuration template
+├── .env.template.txt        # Configuration template
 ├── .gitignore               # Git exclusions
 ├── README.md                # Project documentation
 ├── package.json             # Node.js dependencies
@@ -238,7 +243,7 @@ mcp-server/
 
 **Implementation Approach Note:**
 
-The repository structure shown above reflects a modular, team-oriented organization suitable for larger projects with multiple developers. The reference implementations provided with this guide (`server-compliant.js`, `gcp-compliant.ts`) use single-file architecture for simplicity and clarity.
+The repository structure shown above reflects a modular, team-oriented organization suitable for larger projects with multiple developers. The reference implementations provided with this guide ([mcp-server-javascript-template.js](../templates/mcp-server-javascript-template.js), [mcp-server-typescript-template.ts](../templates/mcp-server-typescript-template.ts), [mcp-server-python-template.py](../templates/mcp-server-python-template.py)) use single-file architecture for simplicity and clarity.
 
 **Both approaches are valid:**
 - **Single-file**: Easier to understand, faster to prototype, suitable for small teams or POC
@@ -330,7 +335,7 @@ Keep documentation synchronized with code:
 - Updating deployment procedures
 - Modifying ServiceNow integration details
 
-**When to Update .env.example:**
+**When to Update .env.template.txt:**
 - Adding new environment variables
 - Changing default values
 - Deprecating old configuration options
@@ -557,7 +562,7 @@ setInterval(() => {
 
 **Documentation:**
 - [ ] README.md up to date with deployment instructions
-- [ ] .env.example includes all required variables
+- [ ] .env.template.txt includes all required variables
 - [ ] API documentation generated (if applicable)
 - [ ] Runbook created for operations team
 
@@ -691,9 +696,9 @@ Enter the following information:
 
 The following reference files accompany this documentation:
 
-### Complete Implementations
+### Production-Ready Templates
 
-**server-compliant.js**
+**[mcp-server-javascript-template.js](../templates/mcp-server-javascript-template.js)**
 - **Purpose:** Local VM deployment reference implementation
 - **Language:** JavaScript (Node.js)
 - **Storage:** File-based client registry, Redis token blacklist
@@ -701,7 +706,7 @@ The following reference files accompany this documentation:
 - **Features:** All documentation compliance improvements applied
 - **Use Case:** Local development, on-premises deployment, VM-based hosting
 
-**gcp-compliant.ts**
+**[mcp-server-typescript-template.ts](../templates/mcp-server-typescript-template.ts)**
 - **Purpose:** Google Cloud deployment reference implementation
 - **Language:** TypeScript
 - **Storage:** Firestore client registry, in-memory token blacklist
@@ -709,56 +714,82 @@ The following reference files accompany this documentation:
 - **Features:** All documentation compliance improvements applied
 - **Use Case:** Google Cloud Run, Cloud Functions, containerized cloud deployment
 
-### Templates
+**[mcp-server-python-template.py](../templates/mcp-server-python-template.py)**
+- **Purpose:** FastAPI-based reference implementation
+- **Language:** Python 3.9+
+- **Storage:** In-memory with production migration notes
+- **Tools:** Example tools included
+- **Features:** Pydantic models, async patterns, comprehensive documentation
+- **Use Case:** FastAPI-based deployments, Python-first organizations
 
-**server-example.js**
-- **Purpose:** White-label template for customization
-- **Language:** JavaScript (Node.js)
-- **Content:** Complete code structure with logging placeholders
-- **Features:** [MUST HAVE], [RECOMMENDED], [OPTIONAL] markers throughout
-- **Use Case:** Starting point for practitioners to build custom implementations
-- **Requires:** Implementation of storage functions, tool functions, and configuration
+**[mcp-server-pseudocode-template.md](../templates/mcp-server-pseudocode-template.md)**
+- **Purpose:** Language-agnostic reference implementation
+- **Language:** Pseudocode
+- **Content:** Complete OAuth 2.1 + PKCE + MCP protocol logic
+- **Features:** Platform-independent, focus on logic and flow
+- **Use Case:** Understanding core concepts, translating to any language
 
-**.env.example**
-- **Purpose:** Environment configuration template
-- **Content:** All required and optional environment variables
-- **Features:** Comprehensive comments explaining each variable
-- **Use Case:** Copy to .env and customize for your deployment
+### Configuration Templates
+
+**[.env.template.txt](../templates/.env.template.txt)**
+- **Purpose:** Comprehensive environment configuration reference
+- **Content:** All required and optional environment variables for all implementations
+- **Features:** Detailed comments, default values, security guidance
+- **Use Case:** Reference for any deployment (JavaScript, TypeScript, Python)
+
+**[.env.example.txt](../templates/.env.example.txt)**
+- **Purpose:** Detailed configuration example
+- **Content:** Local VM/JavaScript implementation focused
+- **Features:** Real-world examples with explanations
+- **Use Case:** Copy to .env and customize for local/VM deployment
 
 ### Visual Resources
 
-**oauth-flow-diagram.mermaid**
-- **Purpose:** OAuth 2.1 sequence diagram
-- **Format:** Mermaid (renders in GitHub, GitLab, documentation sites)
+**[View_Diagram.md](diagrams/View_Diagram.md)**
+- **Purpose:** Interactive OAuth 2.1 + PKCE flow visualization
+- **Format:** Markdown with embedded Mermaid diagram
 - **Content:** Complete OAuth flow from DCR through token refresh
-- **Use Case:** Documentation, presentations, team training
+- **Use Case:** GitHub viewing, documentation, team training
+- **Renders:** Directly in GitHub with native Mermaid support
 
-**oauth-flow-diagram.svg**
-- **Purpose:** OAuth 2.1 sequence diagram
-- **Format:** SVG (scalable vector graphics)
-- **Content:** Same as Mermaid version
-- **Use Case:** Embedding in PDFs, presentations, universal compatibility
+**[oauth-flow-github-safe.mermaid](diagrams/oauth-flow-github-safe.mermaid)**
+- **Purpose:** Simplified OAuth 2.1 sequence diagram
+- **Format:** Mermaid (GitHub-compatible, no HTML tags)
+- **Content:** 6-step OAuth flow with PKCE
+- **Use Case:** Embedding in GitHub markdown, documentation sites
+
+**[oauth-flow.mermaid](diagrams/oauth-flow.mermaid)**
+- **Purpose:** Detailed OAuth 2.1 sequence diagram
+- **Format:** Mermaid with multi-line notes (HTML <br/> tags)
+- **Content:** Same flow with more detailed annotations
+- **Use Case:** Local editing, tools that support full Mermaid syntax
 
 ### How to Use Reference Files
 
 **For Local/VM Deployment:**
-1. Use `server-compliant.js` as your starting point
+1. Use [mcp-server-javascript-template.js](../templates/mcp-server-javascript-template.js) as your starting point
 2. Copy to your project directory
 3. Customize tool implementations for your use case
-4. Configure .env based on .env.example
+4. Configure .env based on [.env.example.txt](../templates/.env.example.txt)
 5. Deploy with PM2 or systemd
 
 **For Cloud Deployment:**
-1. Use `gcp-compliant.ts` as reference for cloud patterns
-2. Adapt storage layer to your cloud provider (Firestore, DynamoDB, etc.)
+1. Use [mcp-server-typescript-template.ts](../templates/mcp-server-typescript-template.ts) as reference for cloud patterns
+2. Adapt storage layer to your cloud provider (Firestore, DynamoDB, Cosmos DB, etc.)
 3. Configure environment variables in cloud platform
 4. Deploy as container or serverless function
 
-**For Custom Implementation:**
-1. Use `server-example.js` as structural template
-2. Implement placeholder functions for your requirements
-3. Choose storage solutions appropriate for your architecture
-4. Add custom tools for your specific use case
+**For Python/FastAPI Deployment:**
+1. Use [mcp-server-python-template.py](../templates/mcp-server-python-template.py) as starting point
+2. Implement storage backend (see migration notes in template)
+3. Configure .env based on [.env.template.txt](../templates/.env.template.txt)
+4. Deploy with uvicorn or gunicorn
+
+**For Other Languages (Go, Java, C#, Rust):**
+1. Study [mcp-server-pseudocode-template.md](../templates/mcp-server-pseudocode-template.md) for logic flow
+2. Refer to [MCP Server Implementation - Implementation Hints.md](MCP%20Server%20Implementation%20-%20Implementation%20Hints.md) for language-specific guidance
+3. Translate pseudocode to your chosen language and framework
+4. Follow the same architectural patterns as other templates
 
 ---
 
@@ -1110,7 +1141,7 @@ loadBlacklist();
 
 **Documentation:**
 - [ ] README.md updated with deployment instructions
-- [ ] .env.example includes all required and optional variables
+- [ ] .env.template.txt and .env.example.txt include all required and optional variables
 - [ ] Runbook created for operations team (restart procedures, troubleshooting)
 - [ ] Architecture diagram created (optional but helpful)
 
@@ -1327,9 +1358,28 @@ Fill in the connection form:
 - Removing tools: Verify no ServiceNow AI agents actively using the tool
 - Changing tool schemas: Update descriptions, test with ServiceNow
 
+---
+
+## Next Steps
+
+This completes the implementation guide. For project overview and community resources, see the [main README](../README.md).
+
+**Ready to deploy?** Use the [production deployment checklist](#appendix-c-production-deployment-checklist) in this document.
+
+**Need help?** Refer back to any part of this guide or consult the [Implementation Hints](MCP%20Server%20Implementation%20-%20Implementation%20Hints.md) for additional languages.
+
+**Questions?** Review the relevant sections of Parts 1-4 or consult the for working examples.
+- **[JavaScript/Node.js](../templates/mcp-server-javascript-template.js)** - JavaScript deployment
+- **[TypeScript](../templates/mcp-server-typescript-template.ts)** - Typescript deployment
+- **[Python/FastAPI](../templates/mcp-server-python-template.py)** - Python-based deployment
+- **[Pseudocode](../templates/mcp-server-pseudocode-template.md)** - Any language
+
+
+---
+
 ## Document Status
 
 - **Part:** 5 of 5
-- **Version:** 1.0
-- **Last Updated:** January 29, 2026
+- **Version:** 1.1
+- **Last Updated:** February 4, 2026
 - **Status:** Complete
