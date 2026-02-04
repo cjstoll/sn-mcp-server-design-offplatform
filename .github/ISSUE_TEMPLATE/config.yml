@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Q&A Discussion
+    url: https://github.com/cjstoll/sn-mcp-server-design-offplatform/discussions/categories/q-a
+    about: Ask implementation questions and get help from the community
+  - name: Ideas Discussion
+    url: https://github.com/cjstoll/sn-mcp-server-design-offplatform/discussions/categories/ideas
+    about: Share ideas and suggestions for the project

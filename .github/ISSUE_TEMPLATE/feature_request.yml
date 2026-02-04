@@ -1,0 +1,76 @@
+name: Feature Request
+description: Suggest new language templates, documentation, or functionality
+title: "[FEATURE]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Suggest improvements to the ServiceNow MCP Server project. This could include new language templates, additional documentation, or enhanced examples.
+  
+  - type: dropdown
+    id: feature_type
+    attributes:
+      label: Feature Type
+      description: What kind of enhancement are you suggesting?
+      options:
+        - New Language Template
+        - Additional Documentation
+        - Enhanced Examples
+        - New Diagram or Visualization
+        - Deployment Guide Improvement
+        - Architecture Enhancement
+        - Other
+    validations:
+      required: true
+  
+  - type: textarea
+    id: feature_description
+    attributes:
+      label: Feature Description
+      description: What would you like to see added or improved?
+      placeholder: |
+        Describe the feature in detail:
+        - What is it?
+        - Why would it be valuable?
+        - Who would benefit from it?
+    validations:
+      required: true
+  
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use Case
+      description: Describe a specific scenario where this feature would be useful
+      placeholder: |
+        Example: "When implementing an MCP server in Go, practitioners currently need to translate from pseudocode. A complete Go template would reduce implementation time and errors."
+    validations:
+      required: true
+  
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Current Workarounds
+      description: How are you currently handling this without the feature?
+      placeholder: "I'm currently using... or I have to manually..."
+  
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: How important is this feature to you?
+      options:
+        - Critical - Blocking my implementation
+        - High - Would significantly improve my workflow
+        - Medium - Nice to have
+        - Low - Minor convenience
+    validations:
+      required: true
+  
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution Interest
+      options:
+        - label: I would be willing to help develop this feature if guidance is provided
+        - label: I have implementation examples I could share

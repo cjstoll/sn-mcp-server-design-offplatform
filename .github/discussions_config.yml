@@ -1,0 +1,24 @@
+# GitHub Discussions Configuration
+# This file defines the discussion categories for the repository
+# To apply: Go to Settings > Discussions > Configure categories
+
+categories:
+  - name: "Q&A"
+    emoji: "❓"
+    description: "Ask questions about implementing MCP servers with ServiceNow OAuth 2.1 integration"
+    format: "question-answer"
+    
+  - name: "Ideas"
+    emoji: "💡"
+    description: "Share ideas for new features, templates, or improvements (not quite ready for a formal feature request)"
+    format: "discussion"
+
+  - name: "Announcements"
+    emoji: "📢"
+    description: "Updates about the project, new releases, and important changes"
+    format: "announcement"
+    
+  - name: "General"
+    emoji: "💬"
+    description: "General discussion about MCP servers, ServiceNow integration, and related topics"
+    format: "discussion"

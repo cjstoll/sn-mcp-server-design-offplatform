@@ -1,0 +1,82 @@
+name: Implementation Question
+description: Ask for clarification on how to implement MCP servers with ServiceNow
+title: "[QUESTION]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ask questions about implementing MCP servers with ServiceNow OAuth 2.1 integration. For general discussions, consider using the Q&A Discussion category instead.
+  
+  - type: dropdown
+    id: implementation_stage
+    attributes:
+      label: Implementation Stage
+      description: Where are you in the implementation process?
+      options:
+        - Planning / Architecture Design
+        - Setting up Infrastructure
+        - OAuth 2.1 Configuration
+        - MCP Server Development
+        - ServiceNow Integration
+        - Testing & Debugging
+        - Production Deployment
+        - Post-Deployment Issues
+    validations:
+      required: true
+  
+  - type: dropdown
+    id: language
+    attributes:
+      label: Programming Language
+      description: Which language are you implementing in?
+      options:
+        - JavaScript/Node.js
+        - TypeScript
+        - Python
+        - Go
+        - Java
+        - C#/.NET
+        - Rust
+        - Other
+        - Not applicable
+    validations:
+      required: true
+  
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What do you need clarification on?
+      placeholder: |
+        Be specific about:
+        - What you're trying to accomplish
+        - What you've tried so far
+        - Where you're stuck or confused
+    validations:
+      required: true
+  
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Provide relevant details about your environment or setup
+      placeholder: |
+        Examples:
+        - ServiceNow instance version
+        - Infrastructure setup (cloud, on-prem, VM)
+        - Relevant error messages
+        - Configuration details (with sensitive data removed)
+  
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      description: Please confirm you've done these steps
+      options:
+        - label: I've reviewed the relevant documentation sections
+          required: true
+        - label: I've checked existing issues and discussions
+          required: true
+        - label: I've removed any sensitive information (credentials, instance URLs, etc.)
+          required: true

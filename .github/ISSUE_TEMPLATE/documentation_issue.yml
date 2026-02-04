@@ -1,0 +1,67 @@
+name: Documentation Issue
+description: Report errors, unclear sections, or missing information in the documentation
+title: "[DOCS]: "
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the ServiceNow MCP Server documentation! Please provide details about the documentation issue you've found.
+  
+  - type: dropdown
+    id: doc_type
+    attributes:
+      label: Documentation Area
+      description: Which part of the documentation has the issue?
+      options:
+        - Implementation Guide (Part 1-5)
+        - Deployment Guide
+        - Template Code
+        - README or Getting Started
+        - Diagrams
+        - Implementation Hints
+        - Other
+    validations:
+      required: true
+  
+  - type: input
+    id: doc_location
+    attributes:
+      label: Specific File or Section
+      description: "Which file or section? (e.g., 'Part 4 OAuth.md - Section 3.2')"
+      placeholder: "Part 4 OAuth.md - Token Exchange Flow"
+    validations:
+      required: true
+  
+  - type: textarea
+    id: issue_description
+    attributes:
+      label: Issue Description
+      description: What's wrong, unclear, or missing?
+      placeholder: |
+        Examples:
+        - "Step 3 references 'client_secret' but it's not clear where this comes from"
+        - "Diagram shows different flow than text description"
+        - "Missing explanation of why Redis is used for token storage"
+    validations:
+      required: true
+  
+  - type: textarea
+    id: suggested_improvement
+    attributes:
+      label: Suggested Improvement (Optional)
+      description: If you have ideas for how to improve this section
+      placeholder: "Consider adding a note that explains..."
+  
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Impact Level
+      description: How much does this affect understanding or implementation?
+      options:
+        - Critical - Blocks implementation
+        - High - Causes significant confusion
+        - Medium - Reduces clarity
+        - Low - Minor improvement opportunity
+    validations:
+      required: true
