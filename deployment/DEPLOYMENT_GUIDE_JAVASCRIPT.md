@@ -9,9 +9,9 @@
 This guide provides JavaScript/Node.js specific instructions for deploying your MCP server using the provided template file. 
 
 **Prerequisites:**
-- Reviewed the [Master Deployment Guide](../DEPLOYMENT_GUIDE.md)
+- Reviewed the [Master Deployment Guide](./README.md)
 - Node.js 18.x or higher installed
-- Template file: `templates/mcp-server-javascript-template.js`
+- Template file: `../templates/mcp-server-javascript-template.js`
 
 **Approach:** Start with the template file and modify as needed. This guide only covers JavaScript-specific setup and deviations from the template.
 
@@ -498,7 +498,7 @@ curl -X POST http://localhost:8080/oauth/revoke \
 
 ### General Issues
 
-See [Master Deployment Guide - Troubleshooting](../DEPLOYMENT_GUIDE.md#troubleshooting) for common OAuth and MCP protocol issues.
+See [Master Deployment Guide - Troubleshooting](./README.md#troubleshooting) for common OAuth and MCP protocol issues.
 
 ---
 
@@ -567,7 +567,7 @@ Start with: `pm2 start ecosystem.config.js`
 ## Reference Documentation
 
 **Master Guide:**
-- [Master Deployment Guide](../DEPLOYMENT_GUIDE.md) - Complete deployment workflow and concepts
+- [Master Deployment Guide](./README.md) - Complete deployment workflow and concepts
 
 **Detailed Implementation:**
 - [Part 2: Server Foundation](../mcp-guide-02-server-foundation.md) - Infrastructure details
@@ -576,7 +576,7 @@ Start with: `pm2 start ecosystem.config.js`
 - [Part 5: Appendices](../mcp-guide-05-appendices.md) - Storage options and production checklist
 
 **Template:**
-- `templates/mcp-server-javascript-template.js` - Complete reference implementation
+- `../templates/mcp-server-javascript-template.js` - Complete reference implementation
 
 ---
 
