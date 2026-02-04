@@ -5,6 +5,56 @@ Production-ready guidance for Model Context Protocol (MCP) server implementation
 
 💡**NOTE:** This is not about setting up MCP Server(s) within a ServiceNow instance aka ON PLATFORM.
 
+---
+
+## Preface
+
+This project represents a collaborative effort between a ServiceNow practitioner and Claude (Anthropic's AI assistant) to create comprehensive, production-ready MCP server implementations for the ServiceNow community.
+
+### How This Project Came Together
+
+The majority of this project's content—including documentation, code templates, implementation guides, and technical specifications—was generated through an iterative collaboration with Claude AI. This work demonstrates how AI can accelerate technical documentation and reference implementation development when guided by domain expertise and real-world implementation experience.
+
+**The Collaboration Process:**
+- **Domain Expertise:** Practical ServiceNow and MCP server implementation knowledge, architectural decisions, and production deployment experience
+- **Content Generation:** Claude AI generated documentation, code templates, pseudocode implementations, and technical specifications based on requirements and feedback
+- **Iterative Refinement:** Multiple review cycles to ensure technical accuracy, completeness, and alignment with production realities
+- **Quality Assurance:** Validation against working implementations and ServiceNow AI Platform requirements
+
+### What Makes This Unique
+
+This is not a theoretical guide—it's grounded in actual production deployments:
+- All OAuth 2.1 + PKCE patterns have been validated with ServiceNow instances
+- Code templates reflect real implementations running in production environments
+- Architecture decisions are based on operational experience, not speculation
+- Documentation includes lessons learned from actual integration challenges
+
+### A Note on AI-Assisted Development
+
+This project showcases the potential of human-AI collaboration in technical documentation:
+- **Speed:** Comprehensive documentation created in days, not weeks
+- **Consistency:** Standardized patterns and terminology throughout
+- **Completeness:** 7,800+ lines of detailed implementation guidance
+- **Multi-language Support:** Templates in JavaScript, TypeScript, Python, plus pseudocode
+- **Professional Quality:** Production-ready code and enterprise-grade documentation
+
+**However**, human expertise remains essential:
+- Architectural decisions and design choices
+- Production validation and testing
+- Real-world problem-solving and troubleshooting
+- Quality control and accuracy verification
+- Community understanding and positioning
+
+### Acknowledgments
+
+**Claude (Anthropic):** Content generation, documentation structure, code template creation, technical writing, and iterative refinement based on feedback.
+
+**Human Contributor:** Domain expertise, architectural guidance, production validation, quality assurance, project vision, and final editorial control.
+
+This collaboration demonstrates that the best technical documentation combines AI's ability to generate comprehensive, well-structured content with human expertise in domain knowledge, real-world validation, and quality assurance.
+
+---
+
 ## Overview
 
 This repository provides enterprise-grade MCP server templates that enable secure, high-performance integration between ServiceNow cloud instances and local AI infrastructure. Built for ServiceNow administrators, AI platform developers, and MCP practitioners who need production-quality implementations that follow OAuth 2.1 standards with PKCE authentication.
@@ -215,6 +265,7 @@ Typical response times for production deployment:
 🚧 Community use cases and examples  
 🚧 Additional AI service integrations  
 
+<!--
 ## Contributing
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
@@ -232,6 +283,8 @@ Areas where contributions would be valuable:
 - **Discussions**: Join conversations in GitHub Discussions
 - **Security**: Report vulnerabilities via [SECURITY.md](SECURITY.md)
 
+-->
+
 ## License
 
 This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
@@ -242,7 +295,7 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) for deta
 - Implements OAuth 2.1 standards per [RFC 9068](https://datatracker.ietf.org/doc/html/rfc9068)
 - Follows MCP specification from [Model Context Protocol](https://modelcontextprotocol.io/)
 
-## Related Projects
+## Related Content
 
 - [Anthropic MCP Specification](https://github.com/anthropics/mcp)
 - [ServiceNow Developer Documentation](https://developer.servicenow.com/)
