@@ -11,25 +11,25 @@ This documentation is organized to support both learning and implementation. Cho
 ## 🎯 Quick Navigation
 
 ### New to MCP Servers?
-**Start here:** [Part 1: Overview](implementation-guide/part-1-overview.md)
+**Start here:** [Part 1: Overview](MCP%20Server%20Implementation%20-%20Part%201%20Overview.md)
 
 ### Ready to Build?
-**Jump to:** [Part 2: Core Infrastructure](implementation-guide/part-2-core-infrastructure.md)
+**Jump to:** [Part 2: Core Infrastructure](MCP%20Server%20Implementation%20-%20Part%202%20Core%20Infrastructure.md)
 
 ### Need OAuth Help?
-**Reference:** [Part 4: OAuth](implementation-guide/part-4-oauth.md)
+**Reference:** [Part 4: OAuth](MCP%20Server%20Implementation%20-%20Part%204%20OAuth.md)
 
 ### Deploying to Production?
-**Checklist:** [Part 5: Appendices](implementation-guide/part-5-appendices.md)
+**Checklist:** [Part 5: Appendices](MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md)
 
 ---
 
 ## 📖 Complete Implementation Guide
 
-The comprehensive guide is structured as a 5-part series, available in both Markdown (.md) and PDF (.pdf) formats.
+The comprehensive guide is structured as a 5-part series in Markdown format.
 
 ### Part 1: Overview
-**File:** `MCP Server Implementation - Part 1 Overview.md` | `.pdf`  
+**File:** `MCP Server Implementation - Part 1 Overview.md`  
 **Length:** ~310 lines  
 **Content:**
 - What is MCP and why it matters
@@ -43,7 +43,7 @@ The comprehensive guide is structured as a 5-part series, available in both Mark
 ---
 
 ### Part 2: Core Infrastructure
-**File:** `MCP Server Implementation - Part 2 Core Infrastructure.md` | `.pdf`  
+**File:** `MCP Server Implementation - Part 2 Core Infrastructure.md`  
 **Length:** ~2,550 lines  
 **Content:**
 - HTTP server setup and configuration
@@ -65,7 +65,7 @@ The comprehensive guide is structured as a 5-part series, available in both Mark
 ---
 
 ### Part 3: Protocol and Tools
-**File:** `MCP Server Implementation - Part 3 Protocol and Tools.md` | `.pdf`  
+**File:** `MCP Server Implementation - Part 3 Protocol and Tools.md`  
 **Length:** ~1,300 lines  
 **Content:**
 - MCP protocol specification compliance
@@ -86,7 +86,7 @@ The comprehensive guide is structured as a 5-part series, available in both Mark
 ---
 
 ### Part 4: OAuth
-**File:** `MCP Server Implementation - Part 4 OAuth.md` | `.pdf`  
+**File:** `MCP Server Implementation - Part 4 OAuth.md`  
 **Length:** ~2,275 lines  
 **Content:**
 - OAuth 2.1 with PKCE specification
@@ -111,7 +111,7 @@ The comprehensive guide is structured as a 5-part series, available in both Mark
 ---
 
 ### Part 5: Appendices
-**File:** `MCP Server Implementation - Part 5 Appendices.md` | `.pdf`  
+**File:** `MCP Server Implementation - Part 5 Appendices.md`  
 **Length:** ~1,356 lines  
 **Content:**
 - Production deployment checklist
@@ -138,7 +138,7 @@ The comprehensive guide is structured as a 5-part series, available in both Mark
 ### Language-Agnostic Resources
 
 #### Pseudocode Template
-**File:** `pseudocode-template.md`  
+**File:** `../templates/mcp-server-pseudocode-template.md`  
 **Purpose:** Complete reference implementation in pseudocode  
 **Use when:** Implementing in any programming language
 
@@ -152,7 +152,7 @@ The comprehensive guide is structured as a 5-part series, available in both Mark
 ---
 
 #### Language Implementation Hints
-**File:** `language-hints.md`  
+**File:** `MCP Server Implementation - Implementation Hints.md`  
 **Languages Covered:** Go, Java/Spring Boot, C#/.NET, Rust  
 **Purpose:** Language-specific guidance and library recommendations
 
@@ -170,37 +170,6 @@ The comprehensive guide is structured as a 5-part series, available in both Mark
 
 ---
 
-### ServiceNow-Specific
-
-#### ServiceNow Integration Guide
-**File:** `servicenow-integration.md`  
-**Purpose:** ServiceNow AI Platform configuration steps  
-**Audience:** ServiceNow administrators
-
-**Covers:**
-- ServiceNow instance configuration
-- AI Platform setup
-- MCP server registration
-- Connection testing
-- Troubleshooting integration issues
-
----
-
-### FAQ and Troubleshooting
-
-#### Frequently Asked Questions
-**File:** `faq.md`  
-**Purpose:** Common questions and answers from real implementations
-
-**Topics:**
-- Authentication patterns
-- Storage decisions
-- Performance considerations
-- Security questions
-- Deployment scenarios
-
----
-
 ## 📊 Visual Resources
 
 ### OAuth Flow Diagrams
@@ -215,6 +184,10 @@ The comprehensive guide is structured as a 5-part series, available in both Mark
 **Use for:** Presentations, PDFs, universal compatibility  
 **Renders in:** All browsers, office applications
 
+**Additional Diagram:**
+**File:** `diagrams/oauth-flow-github-safe.mermaid`  
+**Use for:** GitHub-optimized rendering with proper escaping
+
 **Flow Covered:**
 1. Dynamic Client Registration (DCR)
 2. Authorization Request (with PKCE)
@@ -228,7 +201,7 @@ The comprehensive guide is structured as a 5-part series, available in both Mark
 ## 🎓 Presentations
 
 ### MCP Server Collaboration
-**File:** `presentations/mcp-server-collaboration.pdf`  
+**File:** `../presentations/MCP_Server_Collaboration.pdf`  
 **Format:** PDF presentation  
 **Audience:** Practitioners, conference attendees, training sessions
 
@@ -244,22 +217,6 @@ The comprehensive guide is structured as a 5-part series, available in both Mark
 - Conference presentations
 - Stakeholder education
 - Community workshops
-
----
-
-## 🗂️ Internal Documentation
-
-> **Note:** Files in the `internal/` directory are for project maintainers and contributors. They are not required for implementation.
-
-### Enhancement Roadmap
-**File:** `internal/enhancement-roadmap.md`  
-**Purpose:** Planned documentation improvements  
-**Audience:** Maintainers and documentation contributors
-
-### Presentation Analysis
-**File:** `internal/presentation-analysis.md`  
-**Purpose:** Quality control comparing slides to implementation  
-**Audience:** Maintainers ensuring consistency
 
 ---
 
@@ -299,16 +256,16 @@ The comprehensive guide is structured as a 5-part series, available in both Mark
 ### Reference Path (Experienced Users)
 
 **Quick Implementation:**
-1. Review pseudocode-template.md
-2. Choose language hints if using Go/Java/C#/Rust
+1. Review [Pseudocode Template](../templates/mcp-server-pseudocode-template.md)
+2. Check [Implementation Hints](MCP%20Server%20Implementation%20-%20Implementation%20Hints.md) for Go/Java/C#/Rust
 3. Reference specific parts as needed
 4. Use Part 5 deployment checklist
 
 **Specific Topics:**
 - **OAuth only:** Part 4 + oauth-flow diagrams
 - **MCP protocol only:** Part 3
-- **ServiceNow setup:** servicenow-integration.md
-- **Troubleshooting:** Part 5 + faq.md
+- **Deployment guides:** See `../deployment/` directory for language-specific guides
+- **Troubleshooting:** Part 5 Appendices
 
 ---
 
@@ -333,11 +290,17 @@ The comprehensive guide is structured as a 5-part series, available in both Mark
 - [ServiceNow Developer Portal](https://developer.servicenow.com/)
 - [ServiceNow AI Platform Documentation](https://docs.servicenow.com/)
 
-### Implementation Code
-See the `implementations/` directory in the repository root for:
-- JavaScript/Node.js (local deployment)
-- TypeScript (Google Cloud)
-- Python/FastAPI
+### Implementation Templates
+See the `../templates/` directory in the repository root for:
+- JavaScript/Node.js template
+- TypeScript template
+- Python template
+- Pseudocode template
+
+See the `../deployment/` directory for language-specific deployment guides:
+- JavaScript deployment guide
+- TypeScript deployment guide
+- Python deployment guide
 
 ---
 
@@ -362,15 +325,15 @@ See the `implementations/` directory in the repository root for:
 ## 🆘 Getting Help
 
 ### Within This Documentation
-1. Check FAQ.md first
-2. Review Part 5 troubleshooting section
-3. Search for error messages in documentation
-4. Compare against reference implementations
+1. Review Part 5 troubleshooting section
+2. Search for error messages in documentation
+3. Compare against reference templates in `../templates/`
+4. Check language-specific deployment guides in `../deployment/`
 
 ### Community Support
-- GitHub Issues: Bug reports and feature requests
-- GitHub Discussions: Implementation questions
-- ServiceNow Community: ServiceNow-specific questions
+- **GitHub Issues:** Bug reports and feature requests
+- **GitHub Discussions:** Implementation questions and community help
+- **ServiceNow Community:** ServiceNow-specific questions
 
 ---
 
@@ -392,8 +355,8 @@ This documentation is part of the ServiceNow MCP Server project and is licensed 
 
 ---
 
-**Ready to get started?** → [Part 1: Overview](implementation-guide/part-1-overview.md)
+**Ready to get started?** → [Part 1: Overview](MCP%20Server%20Implementation%20-%20Part%201%20Overview.md)
 
-**Have questions?** → [FAQ](faq.md)
+**Need implementation guidance?** → [Implementation Hints](MCP%20Server%20Implementation%20-%20Implementation%20Hints.md)
 
-**Need language-specific help?** → [Language Hints](language-hints.md)
+**Looking for templates?** → [Templates Directory](../templates/)
