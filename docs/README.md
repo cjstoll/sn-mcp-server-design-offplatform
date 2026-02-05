@@ -270,14 +270,6 @@ The comprehensive guide is structured as a 5-part series in Markdown format.
 - **Deployment guides:** See `../deployment/` directory for language-specific guides
 - **Troubleshooting:** Part 5 Appendices
 
----
-
-## 📌 Version Information
-
-**Current Documentation Version:** 3.3.0  
-**Last Updated:** February 2026  
-**MCP Protocol Version:** 2025-06-18  
-**OAuth Specification:** OAuth 2.1 (RFC 9068)
 
 ---
 
@@ -338,17 +330,6 @@ See the [`deployment/`](../deployment/) directory for language-specific deployme
 - **GitHub Discussions:** Implementation questions and community help
 - **ServiceNow Community:** ServiceNow-specific questions
 
----
-
-## 📝 Contributing to Documentation
-
-Found a typo? Have a suggestion? See [CONTRIBUTING.md](../CONTRIBUTING.md) in the repository root.
-
-**Documentation contributions welcome:**
-- Fixing errors or unclear explanations
-- Adding examples
-- Improving diagrams
-- Translating to other languages
 
 ---
 
@@ -360,8 +341,15 @@ This documentation is part of the ServiceNow MCP Server project and is licensed 
 
 **Ready to get started?** → [Part 1: Overview](MCP%20Server%20Implementation%20-%20Part%201%20Overview.md)
 
-**Need implementation guidance?** → [Implementation Hints](MCP%20Server%20Implementation%20-%20Implementation%20Hints.md)
-
 **Looking for templates?** → [Templates Directory](../templates/)
 
 **Need deployment help?** → [Deployment Guides](../deployment/)
+
+---
+
+## 📌 Version Information
+
+**Current Documentation Version:** 3.3.0  
+**Last Updated:** February 2026  
+**MCP Protocol Version:** 2025-06-18  
+**OAuth Specification:** OAuth 2.1 (RFC 9068)
