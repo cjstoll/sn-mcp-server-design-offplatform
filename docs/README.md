@@ -201,8 +201,8 @@ The comprehensive guide is structured as a 5-part series in Markdown format.
 
 ---
 
-## 🎓 Presentations
-
+## 🎓 Presentations (TBD)
+<!--
 ### MCP Server Collaboration
 **File:** [`MCP_Server_Collaboration.pdf`](../presentations/MCP_Server_Collaboration.pdf)  
 **Format:** PDF presentation  
@@ -220,7 +220,7 @@ The comprehensive guide is structured as a 5-part series in Markdown format.
 - Conference presentations
 - Stakeholder education
 - Community workshops
-
+-->
 ---
 
 ## 📋 How to Use This Documentation
