@@ -78,6 +78,28 @@ All implementations must include:
 
 ---
 
+### Generating Secure Secrets
+
+All MCP server deployments require cryptographically secure secrets for JWT signing and DCR endpoint protection. Generate these before first deployment.
+
+**Using OpenSSL (Cross-Platform):**
+```bash
+# Generate JWT_SECRET (base64-encoded, 32 bytes)
+openssl rand -base64 32
+
+# Generate DCR_AUTH_TOKEN (hex-encoded, 32 bytes)  
+openssl rand -hex 32
+```
+
+**Best Practice:** Generate new secrets for each environment (development, staging, production). Never reuse secrets across environments.
+
+💡 **Cloud Deployments:** For Google Cloud Run, AWS Lambda, or Azure Functions, use the platform's secret manager instead of `.env` files:
+- **GCP:** `gcloud secrets create jwt-secret --data-file=-` (paste secret when prompted)
+- **AWS:** `aws secretsmanager create-secret --name jwt-secret --secret-string "your-secret"`
+- **Azure:** `az keyvault secret set --vault-name myvault --name jwt-secret --value "your-secret"`
+
+---
+
 ## Go Implementation Hints
 
 ### Recommended Web Framework
@@ -1880,3 +1902,11 @@ This guide provides language-specific hints for implementing MCP servers with OA
 **Questions or Need Help?**
 
 These hints should get you started, but every implementation will have unique requirements. Refer to official documentation for your chosen frameworks and libraries, and don't hesitate to adapt these patterns to your specific use case.
+
+---
+
+## Document Status
+
+- **Version:** 2.0
+- **Last Updated:** February 6, 2026
+- **Status:** Complete
