@@ -509,6 +509,73 @@ app.POST('/register', RATE_LIMITER, handle_dcr_registration)
 ```
 
 ---
+
+**Client Secret Storage Security Note:**
+
+💡 **IMPORTANT: Client Secret Hashing Recommendation**
+
+**For Production Deployments:**
+
+The pseudocode examples in Part 2 show client secret hashing using bcrypt/argon2. However, the provided templates store secrets in plaintext for simplicity. For production deployments, you should hash client secrets before storage:
+
+**Recommended Approach (bcrypt):**
+```pseudocode
+FUNCTION register_client_secure(client_data):
+    // Generate secure client secret
+    client_secret = GENERATE_SECURE_TOKEN(32)
+    
+    // Hash the secret before storage
+    client_secret_hash = BCRYPT_HASH(client_secret, rounds=10)
+    
+    // Store hashed secret
+    client_record = {
+        client_id: client_data.client_id,
+        client_secret_hash: client_secret_hash,  // Hashed, not plaintext
+        client_name: client_data.client_name,
+        redirect_uris: client_data.redirect_uris
+    }
+    STORE_CLIENT(client_record)
+    
+    // Return plaintext secret ONLY in registration response
+    // Client must save it - server never stores plaintext
+    RETURN {
+        client_id: client_data.client_id,
+        client_secret: client_secret,  // Plaintext only in response
+        ...
+    }
+END FUNCTION
+
+FUNCTION validate_client_secret(client_id, provided_secret):
+    client = LOAD_CLIENT(client_id)
+    
+    // Compare using bcrypt
+    is_valid = BCRYPT_COMPARE(provided_secret, client.client_secret_hash)
+    RETURN is_valid
+END FUNCTION
+```
+
+**Why Hash Client Secrets:**
+1. **Defense in Depth:** If database is compromised, secrets aren't immediately exposed
+2. **Compliance:** Many security frameworks require secret hashing
+3. **Best Practice:** OAuth 2.1 security recommendations encourage secret hashing
+
+**When Plaintext is Acceptable:**
+- Development/testing environments
+- Single-server POCs with restricted database access
+- When using hardware security modules (HSMs) for secret storage
+- When database is encrypted at rest with strict access controls
+
+**Template Modification:**
+To implement secret hashing in your template:
+1. Install `bcrypt`: Add to `package.json` dependencies
+2. Hash on registration: `const hash = await bcrypt.hash(client_secret, 10)`
+3. Store hash: Save `client_secret_hash` instead of `client_secret`
+4. Validate: Use `await bcrypt.compare(provided_secret, stored_hash)`
+
+See templates for current implementation; modify for production security requirements.
+
+
+---
 ## Authorization Endpoint
 
 ### OAuth 2.1 Authorization Code Flow with PKCE
@@ -978,6 +1045,6 @@ Proceed to **[Part 5: Appendices](MCP%20Server%20Implementation%20-%20Part%205%2
 ## Document Status
 
 - **Part:** 4 of 5
-- **Version:** 1.1
-- **Last Updated:** February 3, 2026
+- **Version:** 2.0
+- **Last Updated:** February 6, 2026
 - **Status:** Complete

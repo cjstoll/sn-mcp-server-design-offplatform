@@ -482,7 +482,23 @@ Key considerations:
 ```
 // Load environment configuration at application start
 LOAD_ENVIRONMENT_VARIABLES_FROM_FILE('.env')
+```
 
+💡 **CRITICAL: Verify Template Dependencies**
+
+When using the provided templates, always verify that your `package.json` dependencies match the actual imports in your chosen template file:
+
+- **JavaScript template:** Requires `redis` (not `ioredis`), `body-parser`, `express-rate-limit`
+- **TypeScript template:** Requires GCP-specific packages (`google-auth-library`, `@google-cloud/firestore`) if using Firestore storage
+- **All templates:** Verify every `import` or `require()` statement has a corresponding package in `dependencies`
+
+**Best Practice:** Run `npm install` and attempt compilation (`node server.js` for JS, `tsc` for TS) immediately after setup to catch missing dependencies before implementing custom logic.
+
+See your language-specific deployment guide for the complete, verified dependency list.
+
+---
+
+```
 // Server Configuration
 PORT = GET_ENV('PORT') OR 3000
 NODE_ENV = GET_ENV('NODE_ENV') OR 'development'
@@ -509,8 +525,50 @@ REDIS_PORT = GET_ENV('REDIS_PORT') OR 6379
 LOG("Environment variables loaded successfully")
 ```
 
+💡 **IMPORTANT: Environment Variable Names Must Match Template Code**
+
+Environment variable names vary across deployment guides and templates. Always verify the exact variable names your chosen template reads from `process.env`:
+
+**Common Naming Variations:**
+- **OAuth Issuer:** Template may read `JWT_ISSUER`, `OAUTH_ISSUER`, or `SERVER_URL`
+- **DCR Token:** Template may read `DCR_AUTH_TOKEN` or `DCR_REGISTRATION_TOKEN`  
+- **Server Port:** Template may read `PORT` or `SERVER_PORT`
+- **CORS Origins:** Template may read `SERVICENOW_INSTANCE`, `ALLOWED_ORIGINS`, or `CORS_ORIGINS`
+
+**Verification Steps:**
+1. Open your chosen template file (`.js`, `.ts`, or `.py`)
+2. Search for all `process.env.` or `os.environ.get()` references
+3. Ensure your `.env` file uses **exact** matching names
+4. Test by logging configuration values at startup
+
+**Silent failure warning:** If variable names don't match, your server will use defaults or undefined values without error messages. Always verify configuration is loaded correctly.
+
 
 **Secret Management**
+
+⚠️ **WARNING: Check Templates for Hardcoded Values**
+
+Before deployment, scan your chosen template for hardcoded values that must be replaced:
+
+**Known Template Issues:**
+- **GCP Project IDs:** Some templates hardcode specific project IDs that only work in original author's environment
+- **Service URLs:** Agent endpoints, database connections, API URLs may point to test/demo services
+- **Default Tool Configurations:** Example tools may reference unavailable external services
+
+**Search patterns to check:**
+```javascript
+// JavaScript/TypeScript - Look for these patterns:
+const projectId = 'specific-project-123'  // ❌ Hardcoded
+const apiUrl = 'https://specific-service.com'  // ❌ Hardcoded
+
+// Should be:
+const projectId = process.env.GCP_PROJECT_ID  // ✅ From environment
+const apiUrl = process.env.API_URL  // ✅ Configurable
+```
+
+Replace all hardcoded values with environment variables before first deployment.
+
+---
 
 **Development:**
 - Use `.env` files with dotenv or similar library
@@ -667,6 +725,24 @@ validate_configuration()
 ### 4. Data Storage Initialization
 
 Determine and initialize your storage approach for client registrations, authorization codes, and token revocations.
+
+💡 **NOTE: Template Storage Implementations Vary**
+
+The provided templates use different default storage backends:
+
+- **JavaScript template:** File-based JSON storage (`./data/registered_clients.json`)
+- **TypeScript template:** Google Cloud Firestore (requires GCP setup)
+- **Python template:** File-based JSON storage
+
+**If your template's default storage doesn't match your deployment:**
+1. Review the storage implementation section in your template
+2. Replace storage calls with your chosen backend (file, Redis, SQL, etc.)
+3. Follow the patterns in this section's pseudocode
+4. Test storage persistence across server restarts
+
+The storage architecture patterns in this section are storage-agnostic and work with any backend.
+
+---
 
 **Important:** The storage solutions presented in this section are **recommended examples**, not mandatory requirements. Choose storage mechanisms that align with your deployment architecture, scalability needs, and operational expertise. The examples use Redis and file-based storage, but you can substitute PostgreSQL, MongoDB, or other solutions that meet the same functional requirements.
 
@@ -1224,6 +1300,6 @@ Proceed to **[Part 3: Protocol and Tools](MCP%20Server%20Implementation%20-%20Pa
 ## Document Status
 
 - **Part:** 2 of 5
-- **Version:** 1.1
-- **Last Updated:** February 3, 2026
+- **Version:** 2.0
+- **Last Updated:** February 6, 2026
 - **Status:** Complete

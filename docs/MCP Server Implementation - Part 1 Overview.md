@@ -342,6 +342,21 @@ This guide focuses exclusively on ServiceNow integration. Patterns for other MCP
 
 ---
 
+## Key Takeaways
+
+Before proceeding to Part 2, ensure you understand:
+
+1. **MCP Protocol Version:** Implement `2025-06-18` (ServiceNow MCP Client v1.2.4+ supports this version)
+2. **Security Requirement:** OAuth 2.1 with PKCE is mandatory for ServiceNow integration
+3. **Transport Method:** Server-Sent Events (SSE) over HTTP/HTTPS is required; stdio/WebSocket are not supported by ServiceNow
+4. **Implementation Approach:** Use language-agnostic pseudocode + language-specific template files for your chosen deployment target
+5. **Scope Boundaries:** This guide covers MCP server authentication & transport; LLM operations and user authentication are handled by ServiceNow
+6. **Next Focus:** Part 2 builds the HTTP server foundation and storage infrastructure that everything else depends on
+
+💡 **Quick Self-Check:** If any of these concepts are unclear, review the relevant sections above before continuing to Part 2.
+
+---
+
 ## Next Steps
 
 Proceed to **[Part 2: Core Infrastructure](MCP%20Server%20Implementation%20-%20Part%202%20Core%20Infrastructure.md) - Server Foundation & Infrastructure** to begin building your MCP server implementation.
@@ -351,6 +366,6 @@ Proceed to **[Part 2: Core Infrastructure](MCP%20Server%20Implementation%20-%20P
 ## Document Status
 
 - **Part:** 1 of 5
-- **Version:** 1.1
-- **Last Updated:** February 3, 2026
+- **Version:** 2.0
+- **Last Updated:** February 6, 2026
 - **Status:** Complete

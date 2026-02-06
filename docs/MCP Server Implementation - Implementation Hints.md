@@ -30,8 +30,9 @@ These hints complement the comprehensive pseudocode template and reference imple
 3. [Java/Spring Boot Implementation Hints](#javaspring-boot-implementation-hints)
 4. [C#/.NET Implementation Hints](#cnet-implementation-hints)
 5. [Rust Implementation Hints](#rust-implementation-hints)
-6. [Storage Backend Recommendations](#storage-backend-recommendations)
-7. [Security Considerations by Language](#security-considerations-by-language)
+6. [Docker Containerization Hints](#docker-containerization-hints)
+7. [Storage Backend Recommendations](#storage-backend-recommendations)
+8. [Security Considerations by Language](#security-considerations-by-language)
 
 ---
 
@@ -1342,6 +1343,388 @@ let state = AppState {
 
 ---
 
+## Docker Containerization Hints
+
+### Overview
+
+Docker containerization enables consistent deployment across environments and simplifies scaling MCP servers. This section provides Dockerfile examples optimized for each language template, along with Docker Compose configurations for local development with Redis and database backends.
+
+**Key Container Principles:**
+- Use official language base images (minimize attack surface)
+- Run as non-root user (security best practice)
+- Implement health checks (enables orchestration)
+- Use multi-stage builds (reduce image size)
+- Mount volumes for persistent data
+- Configure environment variables externally
+
+### Dockerfile Examples by Language
+
+#### JavaScript/Node.js Dockerfile
+
+**For:** `mcp-server-javascript-template.js`
+
+```dockerfile
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy application code
+COPY server.js ./
+
+# Create data directory for file-based storage
+RUN mkdir -p /app/data
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
+
+# Change ownership
+RUN chown -R nodejs:nodejs /app
+
+# Switch to non-root user
+USER nodejs
+
+# Expose port
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:8080/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"
+
+# Start server
+CMD ["node", "server.js"]
+```
+
+#### TypeScript Dockerfile
+
+**For:** `mcp-server-typescript-template.ts`
+
+```dockerfile
+# Multi-stage build for TypeScript
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY tsconfig.json ./
+
+# Install all dependencies (including devDependencies for build)
+RUN npm ci
+
+# Copy source code
+COPY src/ ./src/
+
+# Compile TypeScript
+RUN npm run build
+
+# Production stage
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install production dependencies only
+RUN npm ci --only=production
+
+# Copy compiled JavaScript from builder
+COPY --from=builder /app/dist ./dist
+
+# Create data directory
+RUN mkdir -p /app/data
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
+RUN chown -R nodejs:nodejs /app
+
+USER nodejs
+
+EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:8080/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"
+
+CMD ["node", "dist/server.js"]
+```
+
+#### Python Dockerfile
+
+**For:** `mcp-server-python-template.py`
+
+```dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY requirements.txt ./
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY server.py ./
+
+# Create data directory
+RUN mkdir -p /app/data
+
+# Create non-root user
+RUN useradd -m -u 1001 appuser && chown -R appuser:appuser /app
+
+USER appuser
+
+EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"
+
+CMD ["python", "server.py"]
+```
+
+### Docker Compose Examples
+
+#### Basic Docker Compose (MCP Server Only)
+
+```yaml
+version: '3.8'
+
+services:
+  mcp-server:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - NODE_ENV=production
+      - JWT_SECRET=${JWT_SECRET}
+      - SERVICENOW_INSTANCE=${SERVICENOW_INSTANCE}
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+```
+
+#### Docker Compose with Redis
+
+```yaml
+version: '3.8'
+
+services:
+  mcp-server:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - NODE_ENV=production
+      - JWT_SECRET=${JWT_SECRET}
+      - SERVICENOW_INSTANCE=${SERVICENOW_INSTANCE}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+
+volumes:
+  redis-data:
+```
+
+#### Docker Compose with PostgreSQL
+
+```yaml
+version: '3.8'
+
+services:
+  mcp-server:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - NODE_ENV=production
+      - JWT_SECRET=${JWT_SECRET}
+      - SERVICENOW_INSTANCE=${SERVICENOW_INSTANCE}
+      - DATABASE_URL=postgresql://mcp:mcp@postgres:5432/mcp_server
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=mcp
+      - POSTGRES_PASSWORD=mcp
+      - POSTGRES_DB=mcp_server
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  redis-data:
+```
+
+### Container Best Practices
+
+#### Security Hardening
+
+1. **Run as Non-Root User:**
+```dockerfile
+# Always create and use non-root user
+RUN addgroup -g 1001 -S appgroup && adduser -S appuser -u 1001
+USER appuser
+```
+
+2. **Minimal Base Images:**
+```dockerfile
+# Use Alpine variants for smaller attack surface
+FROM node:18-alpine  # ~170MB vs ~900MB for full image
+FROM python:3.11-slim  # ~150MB vs ~900MB
+```
+
+3. **Multi-Stage Builds:**
+```dockerfile
+# Build stage (larger, includes dev tools)
+FROM node:18 AS builder
+# ... compile TypeScript ...
+
+# Runtime stage (minimal, production only)
+FROM node:18-alpine
+COPY --from=builder /app/dist ./dist
+```
+
+#### Performance Optimization
+
+1. **Layer Caching:**
+```dockerfile
+# Copy package files first (changes less frequently)
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Copy source code last (changes more frequently)
+COPY . .
+```
+
+2. **Health Checks:**
+```dockerfile
+# Enable container orchestration health monitoring
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost:8080/health || exit 1
+```
+
+3. **Resource Limits:**
+```yaml
+# In docker-compose.yml
+services:
+  mcp-server:
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+```
+
+### Environment Variable Injection
+
+#### Using .env Files (Development)
+
+```bash
+# Create .env file
+cat > .env << EOF
+JWT_SECRET=$(openssl rand -base64 32)
+DCR_AUTH_TOKEN=$(openssl rand -base64 32)
+SERVICENOW_INSTANCE=https://your-instance.service-now.com
+EOF
+
+# Run with env file
+docker-compose --env-file .env up
+```
+
+#### Using Secrets (Production)
+
+```yaml
+# docker-compose.yml with secrets
+version: '3.8'
+
+services:
+  mcp-server:
+    environment:
+      - JWT_SECRET_FILE=/run/secrets/jwt_secret
+    secrets:
+      - jwt_secret
+
+secrets:
+  jwt_secret:
+    external: true
+```
+
+### Volume Mounts for Persistence
+
+```yaml
+# Persistent data storage
+volumes:
+  - ./data:/app/data           # Client registrations
+  - ./logs:/app/logs           # Log files
+  - ./certs:/app/certs:ro      # TLS certificates (read-only)
+```
+
+### Common Docker Issues
+
+**Issue:** Container exits immediately  
+**Solution:** Check logs with `docker-compose logs mcp-server`, verify environment variables are set
+
+**Issue:** Cannot connect to Redis/PostgreSQL  
+**Solution:** Use service names (`redis`, `postgres`) as hostnames in container network, not `localhost`
+
+**Issue:** Permission denied writing to /app/data  
+**Solution:** Ensure volume mount has correct permissions, or create directory in Dockerfile with correct ownership
+
+**Issue:** Health check failing  
+**Solution:** Verify health check endpoint returns 200, adjust timeout/interval if app has slow startup
+
+---
+
 ## Storage Backend Recommendations
 
 ### Redis
@@ -1473,24 +1856,26 @@ All languages should:
 
 ## Conclusion
 
-This guide provides language-specific hints for implementing MCP servers with OAuth 2.1 + PKCE authentication in Go, Java/Spring Boot, C#/.NET, and Rust. While the core OAuth and MCP protocol logic remains consistent across languages (as shown in the pseudocode template), each language has its own ecosystem of libraries, frameworks, and best practices.
+This guide provides language-specific hints for implementing MCP servers with OAuth 2.1 + PKCE authentication in Go, Java/Spring Boot, C#/.NET, and Rust, along with Docker containerization patterns for all languages. While the core OAuth and MCP protocol logic remains consistent across languages (as shown in the pseudocode template), each language has its own ecosystem of libraries, frameworks, and best practices.
 
 **Key Takeaways:**
 
 1. **All languages can successfully implement the specification** - Choose based on your team's expertise and infrastructure
-2. **Storage patterns are similar** - Redis for ephemeral data, PostgreSQL/similar for persistent data
-3. **Security requirements are universal** - HTTPS, PKCE, token rotation, and rate limiting apply to all
-4. **Performance characteristics differ** - Rust and Go offer lowest latency, Java/.NET excel at enterprise scale
-5. **Developer experience varies** - Use the language that makes your team most productive
+2. **Docker enables consistent deployment** - Containerize for portability and simplified operations
+3. **Storage patterns are similar** - Redis for ephemeral data, PostgreSQL/similar for persistent data
+4. **Security requirements are universal** - HTTPS, PKCE, token rotation, and rate limiting apply to all
+5. **Performance characteristics differ** - Rust and Go offer lowest latency, Java/.NET excel at enterprise scale
+6. **Developer experience varies** - Use the language that makes your team most productive
 
 **Next Steps:**
 
 1. Review the pseudocode template for complete logic flow
 2. Examine reference implementations (JavaScript, TypeScript, Python)
 3. Set up your development environment with recommended libraries
-4. Implement core OAuth 2.1 flow first
-5. Add MCP protocol handlers
-6. Test thoroughly before production deployment
+4. Choose deployment strategy (Docker, VM, cloud platform)
+5. Implement core OAuth 2.1 flow first
+6. Add MCP protocol handlers
+7. Test thoroughly before production deployment
 
 **Questions or Need Help?**
 

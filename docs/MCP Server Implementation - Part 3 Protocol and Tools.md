@@ -159,12 +159,21 @@ The initialize method establishes the connection between ServiceNow and your MCP
 
 **Protocol Version Note:**
 
-This guide uses `2025-03-26` in code examples, which was validated with ServiceNow Zurich Patch 4+. ServiceNow's official documentation states support for `2025-06-18`. Both versions work in practice with current ServiceNow releases.
+💡 **IMPORTANT: Use Protocol Version 2025-06-18 for ServiceNow Integration**
 
-**Version Selection Guidance:**
-- Use `2025-03-26` if deploying to Zurich Patch 4+ environments
-- Use `2025-06-18` for maximum compatibility across ServiceNow versions
-- Differences between these versions are minimal and do not affect ServiceNow integration
+While this document's examples show `2025-03-26` (validated with earlier ServiceNow releases), **use `2025-06-18` as your implementation target** per Part 1 requirements. ServiceNow's current MCP Client supports `2025-06-18`.
+
+**Version Compatibility:**
+- **Recommended:** `2025-06-18` (current ServiceNow standard)
+- **Also Compatible:** `2025-03-26` (earlier version, still works)
+- **Differences:** Minimal - both work with ServiceNow Yokohama Patch 9+ and Zurich Patch 2+
+
+**Template Alignment:**
+- TypeScript template: Uses `2025-06-18` ✅
+- JavaScript template: Uses `2025-03-26` (update recommended)
+- Python template: Verify in template file
+
+Return `2025-06-18` in your initialize response for maximum compatibility.
 
 **Implementation Approach**
 
@@ -675,6 +684,6 @@ Proceed to **[Part 4: OAuth](MCP%20Server%20Implementation%20-%20Part%204%20OAut
 ## Document Status
 
 - **Part:** 3 of 5
-- **Version:** 1.1
-- **Last Updated:** February 3, 2026
+- **Version:** 2.0
+- **Last Updated:** February 6, 2026
 - **Status:** Complete
