@@ -1,97 +1,149 @@
-# MCP Server Templates
+# MCP Server Reference Templates
 
-This directory contains production-ready MCP server templates implementing OAuth 2.1 + PKCE authentication for ServiceNow integration.
+This directory contains **reference implementations** demonstrating production-quality code patterns for MCP servers. These templates serve as starting points and learning resources - not complete deployment packages.
+
+## Understanding "Reference Template"
+
+**What These Templates Provide:**
+- ✅ Production-quality code demonstrating OAuth 2.1 + PKCE implementation
+- ✅ Complete MCP protocol handlers (initialize, tools, notifications)
+- ✅ Security best practices (JWT tokens, PKCE validation, rate limiting)
+- ✅ Well-structured, documented code you can learn from and adapt
+
+**What You Need to Add:**
+- ⚙️ Dependency configuration (`package.json`, `requirements.txt`, etc.) for your environment
+- ⚙️ Environment configuration files (`.env`) with your specific settings
+- ⚙️ Deployment infrastructure (Dockerfile, systemd units, process management)
+- ⚙️ HTTPS/TLS setup (certificates, reverse proxy, load balancer)
+- ⚙️ Testing framework and validation scripts
+- ⚙️ Monitoring, logging, and operational tooling integration
+
+**Expected Effort to Deploy:**
+- Template adaptation: 4-8 hours
+- Infrastructure setup: 4-8 hours
+- Testing & validation: 2-4 hours
+
+See [Deployment Guides](../deployment/) for platform-specific guidance on completing your deployment.
+
+---
 
 ## 📁 Available Templates
 
-### Production-Ready Implementations
-
-#### JavaScript/Node.js Template
+### JavaScript Reference Template
 **File:** [`mcp-server-javascript-template.js`](mcp-server-javascript-template.js)  
-**Framework:** Express.js  
-**Best For:** Local deployments, rapid prototyping, Node.js environments  
-**Features:**
-- Complete OAuth 2.1 + PKCE flow
-- JWT token management
-- MCP protocol handlers (initialize, tools)
-- Rate limiting and security middleware
-- File-based storage (easily adaptable to Redis/database)
+**Target Environment:** Local VM, on-premises deployment  
+**Reference Storage:** File-based client registry, Redis token blacklist  
+**Reference Tools:** LLM generation (Ollama), file operations
 
-**Quick Start:**
-```bash
-npm install express cors body-parser jsonwebtoken
-node mcp-server-javascript-template.js
-```
+**What's Included:**
+- Complete OAuth 2.1 + PKCE implementation
+- MCP protocol handlers (initialize, tools/list, tools/call)
+- JWT token management with blacklisting
+- Rate limiting and audit logging
+- Graceful shutdown and error handling
+
+**What You Configure:**
+- Create `package.json` with dependencies
+- Set up `.env` file with your settings
+- Implement HTTPS/TLS (reverse proxy or native)
+- Configure storage paths or migrate to database
+- Adapt tools to your AI services
+- Set up process management (PM2, systemd)
+
+**Best For:** On-premises deployments, Node.js environments, practitioners comfortable with JavaScript async patterns
+
+**Deployment Guide:** [JavaScript Deployment Guide](../deployment/DEPLOYMENT_GUIDE_JAVASCRIPT.md)
 
 ---
 
-#### TypeScript Template
+### TypeScript Reference Template
 **File:** [`mcp-server-typescript-template.ts`](mcp-server-typescript-template.ts)  
-**Framework:** Express.js with TypeScript  
-**Best For:** Cloud deployments (Google Cloud, AWS), type-safe implementations  
-**Features:**
-- Full type safety with TypeScript interfaces
-- OAuth 2.1 + PKCE authentication
-- JWT token management with proper typing
-- MCP protocol compliance
-- Production-grade error handling
-- Structured for serverless deployment
+**Target Environment:** Google Cloud Run, cloud platforms  
+**Reference Storage:** Firestore (cloud), in-memory token blacklist  
+**Reference Tools:** A2A agent integration, utility tools
 
-**Quick Start:**
-```bash
-npm install express @types/express jsonwebtoken @types/jsonwebtoken typescript
-npx ts-node mcp-server-typescript-template.ts
-```
+**What's Included:**
+- Complete OAuth 2.1 + PKCE implementation with TypeScript types
+- MCP protocol handlers with full type safety
+- JWT token management with typed interfaces
+- Type-safe configuration and error handling
+- Production-grade async patterns
+
+**What You Configure:**
+- Create `package.json` and `tsconfig.json`
+- Set up `.env` file or cloud environment variables
+- Configure cloud deployment (Cloud Run, AWS Lambda, etc.)
+- Adapt storage layer for your cloud provider
+- Implement HTTPS/TLS (handled by cloud platform or add reverse proxy)
+- Set up CI/CD pipeline for TypeScript compilation
+
+**Best For:** Cloud deployments, type-safe implementations, serverless architectures, teams with TypeScript experience
+
+**Deployment Guide:** [TypeScript Deployment Guide](../deployment/DEPLOYMENT_GUIDE_TYPESCRIPT.md)
 
 ---
 
-#### Python/FastAPI Template
+### Python Reference Template
 **File:** [`mcp-server-python-template.py`](mcp-server-python-template.py)  
-**Framework:** FastAPI  
-**Best For:** Python environments, microservices, async operations  
-**Features:**
-- Modern async Python with FastAPI
-- OAuth 2.1 + PKCE implementation
-- Pydantic models for request/response validation
-- Automatic OpenAPI documentation
-- Built-in rate limiting
-- Production-ready error handling
+**Target Environment:** Any Python 3.9+ environment  
+**Reference Storage:** In-memory (migration notes provided)  
+**Reference Tools:** Example tools included
 
-**Quick Start:**
-```bash
-pip install fastapi uvicorn pyjwt cryptography python-multipart
-uvicorn mcp-server-python-template:app --reload
-```
+**What's Included:**
+- Complete OAuth 2.1 + PKCE implementation with FastAPI
+- MCP protocol handlers with Pydantic models
+- JWT token management with python-jose
+- Automatic API documentation (OpenAPI/Swagger)
+- Async/await patterns throughout
+
+**What You Configure:**
+- Create `requirements.txt` with dependencies
+- Set up `.env` file with your settings
+- Implement persistent storage (migrate from in-memory)
+- Configure ASGI server (uvicorn/gunicorn)
+- Implement HTTPS/TLS (reverse proxy)
+- Adapt tools to your AI services
+- Set up process management
+
+**Best For:** Python environments, FastAPI familiarity, async operations, teams with Python expertise
+
+**Deployment Guide:** [Python Deployment Guide](../deployment/DEPLOYMENT_GUIDE_PYTHON.md)
 
 ---
 
-### Reference Implementation
-
-#### Pseudocode Template
+### Pseudocode Reference Template
 **File:** [`mcp-server-pseudocode-template.md`](mcp-server-pseudocode-template.md)  
 **Purpose:** Language-agnostic reference implementation  
-**Best For:** Understanding the complete flow, implementing in other languages  
-**Contains:**
+**Contains:** Complete logic flow and algorithms
+
+**What's Included:**
 - Complete OAuth 2.1 + PKCE flow in pseudocode
 - All MCP protocol handlers
-- JWT token generation and validation
-- PKCE challenge/verifier logic
+- JWT token generation and validation logic
+- PKCE challenge/verifier algorithms
 - Storage patterns for tokens and clients
 - Rate limiting algorithms
 - Error handling patterns
 
-**Use When:**
-- Implementing in Go, Java, C#, Rust, or other languages
-- Understanding the complete authentication flow
-- Validating your implementation logic
-- Teaching or documenting the system
+**What You Implement:**
+- Translate pseudocode to your language (Go, Java, C#, Rust, etc.)
+- Create dependency configuration for your ecosystem
+- Set up environment configuration
+- Choose and configure storage backend
+- Implement HTTPS/TLS for your platform
+- Add monitoring and logging
+- Set up deployment infrastructure
+
+**Best For:** Implementing in languages not provided (Go, Java, C#, Rust), understanding complete logic flow, validating implementation correctness, teaching or documenting the system
+
+**Language-Specific Guidance:** [Implementation Hints](../docs/MCP%20Server%20Implementation%20-%20Implementation%20Hints.md)
 
 ---
 
 ## 🎯 Choosing the Right Template
 
 ### Use JavaScript Template When:
-- Deploying locally on-premise
+- Deploying locally on-premises
 - Quick prototyping or proof-of-concept
 - Team expertise is in Node.js
 - Using PM2 or similar process managers
@@ -170,65 +222,34 @@ For implementing in Go, Java, C#, or Rust, see:
 
 1. **Choose Your Template** based on your language/platform preference
 2. **Copy the template** to your project directory
-3. **Configure environment variables** (JWT_SECRET, JWT_ISSUER, etc.)
-4. **Install dependencies** using the Quick Start commands above
-5. **Review deployment guide** for your chosen language
-6. **Test locally** before production deployment
-7. **Follow security checklist** in [Part 5 Appendices](../docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md)
+3. **Review the deployment guide** for your chosen language
+4. **Create dependency configuration** (`package.json`, `requirements.txt`, etc.)
+5. **Configure environment variables** (`.env` file)
+6. **Implement infrastructure** (HTTPS, storage, monitoring)
+7. **Test locally** before production deployment
+8. **Follow deployment checklist** from [Part 5](../docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md)
 
 ---
 
-## 🔐 Security Notes
+## ⚠️ Important Notes
 
-All templates implement:
-- ✅ OAuth 2.1 with PKCE (RFC 7636)
-- ✅ JWT token-based authentication (RFC 9068)
-- ✅ Dynamic Client Registration
-- ✅ Rate limiting protection
-- ✅ Token rotation and revocation
-- ✅ Secure token storage patterns
-- ✅ CORS configuration
-- ✅ Request validation
+**These are reference implementations:**
+- Start with a template as your foundation
+- Adapt to your specific requirements
+- Complete the infrastructure setup
+- Test thoroughly before production use
 
-**Before Production:**
-- Generate strong JWT_SECRET (minimum 256 bits)
-- Use HTTPS/TLS for all connections
-- Configure proper CORS policies
-- Enable rate limiting
-- Set up monitoring and logging
-- Review security hardening in [Part 4: OAuth](../docs/MCP%20Server%20Implementation%20-%20Part%204%20OAuth.md) documentation
+**Security Considerations:**
+- Never commit `.env` files to version control
+- Generate unique secrets for each environment
+- Use proper secret management in production
+- Review [Part 4: OAuth Security](../docs/MCP%20Server%20Implementation%20-%20Part%204%20OAuth.md) before deployment
 
----
-
-## 📖 Template Structure
-
-Each production template follows this structure:
-
-1. **Configuration** - Environment variables and constants
-2. **Storage Layer** - Token and client data management
-3. **JWT Functions** - Token generation and validation
-4. **PKCE Functions** - Challenge/verifier validation
-5. **OAuth Endpoints** - DCR, authorize, token, revoke
-6. **MCP Endpoint** - Protocol handler for tools/resources
-7. **Middleware** - Authentication, rate limiting, error handling
-8. **Server Initialization** - HTTP server setup and startup
-
-This consistent structure makes it easy to:
-- Understand any template quickly
-- Compare implementations across languages
-- Adapt templates to your specific needs
-- Maintain and extend functionality
+**Support:**
+- For implementation questions, see the [documentation](../docs/)
+- For deployment issues, check [deployment guides](../deployment/)
+- For ServiceNow integration, see [Part 5 Appendix D](../docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md#appendix-d-servicenow-connection-configuration)
 
 ---
 
-## 💡 Support
-
-- **Issues:** Report bugs or request features via GitHub Issues
-- **Discussions:** Ask questions in GitHub Discussions
-- **Documentation:** Full implementation guide in [`docs/`](../docs/)
-
----
-
-## 📄 License
-
-These templates are part of the ServiceNow MCP Server project and are licensed under the MIT License. See [LICENSE](../LICENSE) for details.
+**Ready to build?** Start with [Part 1: Overview](../docs/MCP%20Server%20Implementation%20-%20Part%201%20Overview.md) to understand the architecture, then choose your template and follow the deployment guide.

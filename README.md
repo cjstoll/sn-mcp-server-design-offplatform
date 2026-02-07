@@ -1,11 +1,34 @@
 # ServiceNow AI Agent Fabric 
 ### MCP Server Implementation - Hosted: Off Platform
 
-Production-ready guidance for Model Context Protocol (MCP) server implementation(s) of hosted AI services and LLMs for integration to ServiceNow AI Platform instances.  
+Comprehensive implementation guidance for Model Context Protocol (MCP) server deployment with OAuth 2.1 + PKCE authentication for integration to ServiceNow AI Platform instances.
 
 💡**NOTE:** This is not about setting up MCP Server(s) within a ServiceNow instance aka ON PLATFORM.
 
-TL;DR - If you are not interested in the creation, thought, and work that went into this then **[Go Here](deployment/README.md)** an just dive into the the deployment steps.
+## Quick Navigation
+
+- **Experienced Practitioners:** Jump to [Implementation Guide](docs/README.md) or [Templates](templates/README.md)
+- **ServiceNow Administrators:** Start with [Part 1: Overview](docs/MCP%20Server%20Implementation%20-%20Part%201%20Overview.md)
+- **AI Stewards & Architects:** Review [Architecture & Security](docs/MCP%20Server%20Implementation%20-%20Part%204%20OAuth.md)
+- **New to MCP:** Read [Project Overview](#overview) below, then start with Part 1
+
+
+TL;DR - If you are not interested in the creation, thought, and work that went into this then **[Go Here](deployment/README.md)** and just dive into the deployment steps.
+
+---
+
+## Before You Start
+
+**This repository is a guide, not a deployment package.** 
+
+You will spend:
+- **6-12 hours** reading documentation and understanding patterns
+- **4-20 hours** configuring deployment infrastructure (depending on platform and experience)
+- **2-4 hours** testing ServiceNow integration
+
+If you need a fully-configured deployment solution, this repository provides the foundation but requires infrastructure expertise to complete.
+
+If you want to **learn** how to build production-quality MCP servers with OAuth 2.1 + PKCE, you're in the right place.
 
 ---
 
@@ -59,26 +82,69 @@ This collaboration demonstrates that the best technical documentation combines A
 
 ## Overview
 
-This repository provides enterprise-grade MCP server templates that enable secure, high-performance integration between ServiceNow cloud instances and local AI infrastructure. Built for ServiceNow administrators, AI platform developers, and MCP practitioners who need production-quality implementations that follow OAuth 2.1 standards with PKCE authentication.
+This repository provides **comprehensive implementation guidance and production-quality reference code** for building secure MCP servers that integrate ServiceNow cloud instances with local AI infrastructure.
+
+**Target Audience:** Experienced practitioners with:
+- Development language expertise (JavaScript, TypeScript, Python, or translation skills)
+- Deployment infrastructure knowledge (VMs, containers, cloud platforms)
+- ServiceNow administration or development experience
+- Familiarity with OAuth 2.1 concepts and HTTP/REST APIs
+
+**What This Repository Provides:**
+- 7,800+ lines of comprehensive implementation documentation
+- Production-quality code templates demonstrating OAuth 2.1 + PKCE patterns
+- ServiceNow integration guidance and protocol compliance patterns
+- Architecture decision frameworks and security best practices
+
+**What You Bring:**
+- Infrastructure provisioning and configuration
+- Environment-specific setup (networking, TLS/HTTPS, secrets management)
+- Testing frameworks and validation for your environment
+- Monitoring, logging, and operational tooling
+- CI/CD pipelines tailored to your workflow
 
 ### What Problem Does This Solve?
 
-ServiceNow's AI Platform enables powerful automation and intelligence capabilities, but many organizations need to:
-- Integrate with locally-hosted LLMs for data privacy or cost control
-- Connect ServiceNow to on-premises AI infrastructure
-- Build custom MCP servers that meet enterprise security standards
-- Deploy across multiple environments (local, cloud, hybrid)
+ServiceNow's AI Platform enables powerful automation and intelligence capabilities, but implementing secure MCP servers requires:
+- Understanding complex OAuth 2.1 + PKCE authentication patterns
+- Implementing MCP protocol correctly for ServiceNow integration
+- Making architecture decisions about storage, deployment, and security
+- Following production-quality patterns for security hardening
 
-This project provides reference implementations that handle the complex authentication, security hardening, and performance optimization required for production deployments.
+**This repository solves the documentation gap** by providing:
+- Clear implementation guidance for OAuth 2.1 + PKCE authentication
+- Production-quality code demonstrating security best practices
+- ServiceNow-specific integration patterns and protocol compliance
+- Architectural decision frameworks for storage and deployment choices
+- Multi-language reference implementations with detailed explanations
 
-## Key Features
+**What this repository does NOT provide:**
+- Turnkey deployment scripts for every infrastructure configuration
+- Environment-specific infrastructure setup (your infrastructure, your choices)
+- Pre-configured monitoring, logging, or operational tooling
+- One-size-fits-all solutions (we provide frameworks; you make decisions)
 
-- **OAuth 2.1 with PKCE**: Industry-standard authentication following machine-to-machine patterns
-- **JWT Token Management**: Secure token generation, validation, and blacklisting
-- **Production Hardening**: Rate limiting, persistent storage, comprehensive audit logging
-- **Multiple Deployment Options**: Local, Google Cloud, and white-label templates
-- **Sub-Second Performance**: Optimized for enterprise-scale operations
-- **ServiceNow AI Platform Ready**: Compatible with ServiceNow's MCP integration requirements
+### Documentation Features
+
+### Implementation Guidance
+- **7,800+ lines** of comprehensive documentation across 5 parts
+- **Progressive learning path:** Foundation → Infrastructure → Protocol → Security → Deployment
+- **Architecture decision frameworks** for storage, scaling, and deployment choices
+- **Production patterns** for rate limiting, audit logging, and error handling
+- **Clear security rationale** for every authentication and authorization decision
+
+### Reference Code Quality
+- **OAuth 2.1 with PKCE**: Complete implementation following machine-to-machine patterns
+- **JWT Token Management**: Secure token generation, validation, blacklisting, and rotation
+- **MCP Protocol Compliance**: Aligned with MCP specification requirements
+- **ServiceNow Integration**: Protocol compliance verified against ServiceNow requirements
+- **Multi-Language Support**: JavaScript, TypeScript, Python templates plus language-agnostic pseudocode
+
+### ServiceNow-Specific Guidance
+- **Connection Configuration:** Step-by-step ServiceNow MCP client setup
+- **Authentication Patterns:** M2M authentication with trust boundary explanation
+- **Troubleshooting Guide:** Common integration issues and resolutions
+- **Testing Progression:** Connection → Auth → Tools → Integration validation
 
 ## Architecture
 
@@ -92,6 +158,8 @@ ServiceNow Instance → OAuth 2.1 Authentication → MCP Server → Local LLM (O
                                               Rate limiting
                                               Audit logging
 ```
+
+**Note:** This diagram shows reference implementation patterns. Your deployment choices for storage (Redis/file/database), infrastructure (VM/cloud/containers), and tooling will vary based on your requirements. See [Part 2: Core Infrastructure](docs/MCP%20Server%20Implementation%20-%20Part%202%20Core%20Infrastructure.md) for decision frameworks.
 
 ### Authentication Flow
 
@@ -243,53 +311,15 @@ Typical response times for production deployment:
 
 - **ServiceNow**: Yokohama (Patch 9) release and later with AI Platform (latest Zurich release - Recommended)
 - **MCP Specification**: JSON-RPC 2.0 protocol
-- **Languages**: JavaScript (Node.js 18.x+), TypeScript, Python (3.9+)
-- **Storage**: Redis 6.x+, PostgreSQL, Firestore, or file-based
-- **Platforms**: Local VMs, Google Cloud Run, AWS, Azure
+- **Languages**: JavaScript (Node.js 18.x+), TypeScript, Python 3.9+
 
-## Use Cases
-
-- **AI-Powered Service Catalog**: Connect ServiceNow to local LLMs for intelligent catalog item recommendations
-- **Automated Incident Classification**: Use custom AI models to categorize and route incidents
-- **Knowledge Base Enhancement**: Integrate local vector databases for improved knowledge search
-- **Custom Chatbots**: Deploy domain-specific LLMs for ServiceNow virtual agents
-- **Compliance & Privacy**: Keep sensitive data processing on-premises while leveraging ServiceNow platform
-
-## Project Status
-
-**Current Version**: 3.3.0 (Production Ready)
-
-✅ OAuth 2.1 with PKCE authentication  
-✅ JWT token management with blacklisting  
-✅ Rate limiting and security hardening  
-✅ Multiple deployment templates  
-✅ Comprehensive documentation  
-🚧 Community use cases and examples  
-🚧 Additional AI service integrations  
-
-<!--
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-Areas where contributions would be valuable:
-- Additional deployment templates (AWS, Azure)
-- Integration examples with other LLM frameworks
-- Performance optimizations
-- Security enhancements
-- Documentation improvements
-
-## Support
-
-- **Issues**: Report bugs or request features via GitHub Issues
-- **Discussions**: Join conversations in GitHub Discussions
-- **Security**: Report vulnerabilities via [SECURITY.md](SECURITY.md)
-
--->
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
@@ -302,10 +332,13 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) for deta
 - [Anthropic MCP Specification](https://github.com/anthropics/mcp)
 - [ServiceNow Documentation](https://www.servicenow.com/docs/)
 - [ServiceNow Developer Documentation](https://developer.servicenow.com/)
-- [Ollama](https://ollama.ai/) - Local LLM runtime
 
 ---
 
 **Built with ❤️ for the ServiceNow and AI communities**
 
-For questions or feedback, please open an issue or start a discussion.
+## Support
+
+- **Issues**: Report bugs or request features via [GitHub Issues](https://github.com/cjstoll/sn-mcp-server-design-offplatform/issues)
+- **Discussions**: Ask questions in [GitHub Discussions](https://github.com/cjstoll/sn-mcp-server-design-offplatform/discussions)
+- **ServiceNow Community**: ServiceNow-specific questions on [ServiceNow Community](https://www.servicenow.com/community/)

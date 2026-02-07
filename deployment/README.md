@@ -8,6 +8,8 @@
 
 This guide walks you through deploying a production-ready MCP server with OAuth 2.1 + PKCE authentication. It provides the deployment workflow and decision points, with language-specific implementation details in separate guides.
 
+**Scope Note:** This guide focuses on **deployment configuration and infrastructure setup** using the reference templates. The templates provide production-quality application code; this guide helps you configure the environment, infrastructure, and operational components needed to run that code in production.
+
 **Time Estimate:** 4-6 hours for complete deployment  
 **Prerequisites:** Familiarity with your chosen language, basic OAuth 2.1 understanding, server administration experience
 

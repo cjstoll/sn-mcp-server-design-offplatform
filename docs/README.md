@@ -1,10 +1,31 @@
 # MCP Server Documentation Index
 
-Welcome to the ServiceNow MCP Server documentation. This comprehensive guide will help you implement production-ready MCP servers with OAuth 2.1 + PKCE authentication.
+Welcome to the ServiceNow MCP Server documentation. This comprehensive implementation guide provides detailed patterns and reference code for building MCP servers with OAuth 2.1 + PKCE authentication.
 
 ## 📚 Documentation Overview
 
 This documentation is organized to support both learning and implementation. Choose your path based on your experience level and goals.
+
+---
+
+## Scope & Target Audience
+
+**This documentation provides:** Comprehensive implementation patterns, architecture decision frameworks, and reference code examples for building MCP servers.
+
+**Target audience:** Experienced practitioners with:
+- Development proficiency in JavaScript, TypeScript, Python, or other languages
+- HTTP server and REST API experience
+- OAuth 2.1 fundamentals understanding
+- Infrastructure deployment knowledge
+
+**Time investment:**
+- Documentation review: 6-12 hours (progressive learning through Parts 1-5)
+- Implementation from patterns: 4-8 hours
+- Deployment configuration: 4-8 hours (see [Deployment Guides](../deployment/))
+- Testing and validation: 2-4 hours
+- **Total: 16-32 hours** depending on experience and environment complexity
+
+**Note:** This is implementation guidance, not a deployment package. Infrastructure setup, environment configuration, and operational tooling are your responsibility. See [Templates](../templates/) for reference code and [Deployment Guides](../deployment/) for infrastructure guidance.
 
 ---
 
@@ -252,7 +273,8 @@ The comprehensive guide is structured as a 5-part series in Markdown format.
    - Configure ServiceNow connection
    - Monitor production deployment
 
-**Total Time:** 13-20 hours for complete implementation
+**Total Time:** 13-20 hours for documentation and implementation  
+**Note:** Add 4-8 hours for infrastructure setup and deployment configuration (see [Deployment Guides](../deployment/))
 
 ---
 
@@ -263,6 +285,7 @@ The comprehensive guide is structured as a 5-part series in Markdown format.
 2. Check [Implementation Hints](MCP%20Server%20Implementation%20-%20Implementation%20Hints.md) for Go/Java/C#/Rust
 3. Reference specific parts as needed
 4. Use Part 5 deployment checklist
+5. **Configure deployment infrastructure** (see [Deployment Guides](../deployment/))
 
 **Specific Topics:**
 - **OAuth only:** Part 4 + oauth-flow diagrams
