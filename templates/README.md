@@ -246,9 +246,9 @@ For implementing in Go, Java, C#, or Rust, see:
 - Review [Part 4: OAuth Security](../docs/MCP%20Server%20Implementation%20-%20Part%204%20OAuth.md) before deployment
 
 **Support:**
-- For implementation questions, see the [documentation](../docs/)
-- For deployment issues, check [deployment guides](../deployment/)
-- For ServiceNow integration, see [Part 5 Appendix D](../docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md#appendix-d-servicenow-connection-configuration)
+- **Documentation Questions**: See the [comprehensive documentation](../docs/) or ask in [GitHub Discussions Q&A](https://github.com/cjstoll/sn-mcp-server-design-offplatform/discussions/categories/q-a)
+- **Deployment Issues**: Check [deployment guides](../deployment/) or report in [GitHub Issues](https://github.com/cjstoll/sn-mcp-server-design-offplatform/issues)
+- **ServiceNow Integration**: See [Part 5 Appendix D](../docs/MCP%20Server%20Implementation%20-%20Part%205%20Appendices.md#appendix-d-servicenow-connection-configuration) or ask on [ServiceNow Community](https://www.servicenow.com/community/)
 
 ---
 

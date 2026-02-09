@@ -349,9 +349,16 @@ See the [`deployment/`](../deployment/) directory for language-specific deployme
 4. Check language-specific deployment guides in [`deployment/`](../deployment/)
 
 ### Community Support
-- **GitHub Issues:** Bug reports and feature requests
-- **GitHub Discussions:** Implementation questions and community help
-- **ServiceNow Community:** ServiceNow-specific questions
+
+**Issues** - Report problems or request features:
+- [Documentation Issue](https://github.com/cjstoll/sn-mcp-server-design-offplatform/issues/new?labels=documentation) - Documentation errors, unclear instructions, or missing content
+- [Feature Request](https://github.com/cjstoll/sn-mcp-server-design-offplatform/issues/new?labels=enhancement) - Suggest new features or improvements
+- [Implementation Question](https://github.com/cjstoll/sn-mcp-server-design-offplatform/issues/new?labels=question) - Technical questions about implementation
+
+**Discussions** - Community conversation:
+- [General](https://github.com/cjstoll/sn-mcp-server-design-offplatform/discussions/categories/general) - General discussion about the project
+- [Ideas](https://github.com/cjstoll/sn-mcp-server-design-offplatform/discussions/categories/ideas) - Share ideas and suggestions
+- [Q&A](https://github.com/cjstoll/sn-mcp-server-design-offplatform/discussions/categories/q-a) - Ask questions and help others
 
 
 ---

@@ -220,9 +220,9 @@ Additional solutions/resources referenced (all implementations):
 ### JavaScript/Node.js (Local Deployment)
 
 ```bash
-# Clone repository
-git clone https://github.com/[username]/servicenow-mcp-server.git
-cd servicenow-mcp-server
+# Fork repository on GitHub, then clone your fork
+git clone https://github.com/YOUR-USERNAME/sn-mcp-server-design-offplatform.git
+cd sn-mcp-server-design-offplatform
 
 # Use the JavaScript template
 cp templates/mcp-server-javascript-template.js server.js
@@ -251,9 +251,9 @@ cp templates/mcp-server-typescript-template.ts src/index.ts
 ### Python (FastAPI)
 
 ```bash
-# Clone repository
-git clone https://github.com/[username]/servicenow-mcp-server.git
-cd servicenow-mcp-server
+# Fork repository on GitHub, then clone your fork
+git clone https://github.com/YOUR-USERNAME/sn-mcp-server-design-offplatform.git
+cd sn-mcp-server-design-offplatform
 
 # Use the Python template
 cp templates/mcp-server-python-template.py main.py
@@ -315,20 +315,27 @@ Typical response times for production deployment:
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+For questions, issues, or contributions:
+
+**Issues** - Report problems or request features:
+- [Documentation Issue](https://github.com/cjstoll/sn-mcp-server-design-offplatform/issues/new?labels=documentation) - Documentation errors, unclear instructions, or missing content
+- [Feature Request](https://github.com/cjstoll/sn-mcp-server-design-offplatform/issues/new?labels=enhancement) - Suggest new features or improvements
+- [Implementation Question](https://github.com/cjstoll/sn-mcp-server-design-offplatform/issues/new?labels=question) - Technical questions about implementation
+
+**Discussions** - Community conversation:
+- [General](https://github.com/cjstoll/sn-mcp-server-design-offplatform/discussions/categories/general) - General discussion about the project
+- [Ideas](https://github.com/cjstoll/sn-mcp-server-design-offplatform/discussions/categories/ideas) - Share ideas and suggestions
+- [Q&A](https://github.com/cjstoll/sn-mcp-server-design-offplatform/discussions/categories/q-a) - Ask questions and help others
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
+## Acknowledgments & Related Content
 
 - Built for the ServiceNow and MCP practitioner communities
 - Implements OAuth 2.1 standards per [RFC 9068](https://datatracker.ietf.org/doc/html/rfc9068)
 - Follows MCP specification from [Model Context Protocol](https://modelcontextprotocol.io/)
-
-## Related Content
-
 - [Anthropic MCP Specification](https://github.com/anthropics/mcp)
 - [ServiceNow Documentation](https://www.servicenow.com/docs/)
 - [ServiceNow Developer Documentation](https://developer.servicenow.com/)
@@ -336,9 +343,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Built with ❤️ for the ServiceNow and AI communities**
-
-## Support
-
-- **Issues**: Report bugs or request features via [GitHub Issues](https://github.com/cjstoll/sn-mcp-server-design-offplatform/issues)
-- **Discussions**: Ask questions in [GitHub Discussions](https://github.com/cjstoll/sn-mcp-server-design-offplatform/discussions)
-- **ServiceNow Community**: ServiceNow-specific questions on [ServiceNow Community](https://www.servicenow.com/community/)
