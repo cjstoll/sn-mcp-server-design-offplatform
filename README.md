@@ -2,8 +2,10 @@
 
 
 🆘 **DISCLAIMER**: This is not OFFICIAL ServiceNow documentation or guidance. 🆘
+
 🚀 See the [Contributing](#contributing) section to report any Issues or Discuss the content within this repo.
 
+---
 
 ### MCP Server Implementation - Hosted: Off Platform
 
