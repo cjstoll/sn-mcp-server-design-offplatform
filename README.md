@@ -1,9 +1,13 @@
 # ServiceNow AI Agent Fabric 
+
+
+🆘 **DISCLAIMER**: This is not OFFICIAL ServiceNow documentation or guidance. 🆘
+🚀 See the [Contributing](#contributing) section to report any Issues or Discuss the content within this repo.
+
+
 ### MCP Server Implementation - Hosted: Off Platform
 
 Comprehensive implementation guidance for Model Context Protocol (MCP) server deployment with OAuth 2.1 + PKCE authentication for integration to ServiceNow AI Platform instances.
-
-🆘 **DISCLAIMER**: This is not OFFICIAL ServiceNow documentation or guidance.  See the [Contributing](#contributing) section to report any Issues or Discuss the content within this repo.
 
 💡**NOTE:** This is not about setting up MCP Server(s) within a ServiceNow instance aka ON PLATFORM.
 
